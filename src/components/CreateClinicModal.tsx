@@ -12,48 +12,50 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { createOwner } from "../api/ownerPetsService";
-import { ROLE } from "../enums/roles.enum";
+import { createClinic } from "../api/clinicsService";
 
 interface CreateOwnerModalProps {
     isOpen: boolean;
     onClose: () => void;
-    addNewOwner: (owner: Owner) => void;
+    addNewClinic: (clinic: Clinic) => void;
 }
 
-export default function CreateOwnerModal({
+export default function CreateClinicModal({
     isOpen,
     onClose,
-    addNewOwner
+    addNewClinic
 }: CreateOwnerModalProps) {
 
-    const [owner, setOwner] = useState<CreateOwnerDto>({
-        firstName: '',
-        lastName: '',
+    const [clinic, setClinic] = useState<CreateClinicDto>({
+        oib: '',
+        name: '',
         email: '',
-        role: ROLE.OWNER,
-        phoneNumber: ''
+        address: '',
+        county: '',
+        phoneNumber: '',
+        webAddress: '',
+        workingHours: []
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     useEffect(() => {
         setButtonDisabled(
-          !(owner.firstName && owner.lastName && owner.email && owner.phoneNumber)
+          !(clinic.oib && clinic.name && clinic.email && clinic.phoneNumber && clinic.address && clinic.workingHours && clinic.county)
         );
-      }, [owner]);
+      }, [clinic]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setOwner(prev => ({ ...prev, [name]: value }));
+        setClinic(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         try {
-            const response = await createOwner(owner);
+            const response = await createClinic(clinic);
             if(response.success){
-                addNewOwner(response.message)
+                addNewClinic(response.message)
                 onClose();
             }
             
@@ -67,24 +69,22 @@ export default function CreateOwnerModal({
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Dodaj novog vlasnika</ModalHeader>
+                    <ModalHeader>Dodaj novu veterinarsku stanicu</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <FormControl isRequired>
-                            <FormLabel>Ime</FormLabel>
+                            <FormLabel>OIB</FormLabel>
                             <Input
-                                placeholder="Ime"
-                                name="firstName"
-                                value={owner?.firstName}
+                                placeholder="OIB"
+                                name="oib"
                                 onChange={handleInputChange}
                             />
                         </FormControl>
                         <FormControl mt={4} isRequired>
-                            <FormLabel>Prezime</FormLabel>
+                            <FormLabel>Ime</FormLabel>
                             <Input
-                                placeholder="Prezime"
-                                name="lastName"
-                                value={owner?.lastName}
+                                placeholder="Ime"
+                                name="name"
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -92,9 +92,31 @@ export default function CreateOwnerModal({
                             <FormLabel>Email</FormLabel>
                             <Input
                                 placeholder="Email"
-                                type="email"
                                 name="email"
-                                value={owner?.email}
+                                onChange={handleInputChange}
+                            />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Web stranica</FormLabel>
+                            <Input
+                                placeholder="Web stranica"
+                                name="webaddress"
+                                onChange={handleInputChange}
+                            />
+                        </FormControl>
+                        <FormControl mt={4} isRequired>
+                            <FormLabel>Adresa</FormLabel>
+                            <Input
+                                placeholder="Adresa"
+                                name="address"
+                                onChange={handleInputChange}
+                            />
+                        </FormControl>
+                        <FormControl mt={4} isRequired>
+                            <FormLabel>Županija</FormLabel>
+                            <Input
+                                placeholder="Županija"
+                                name="county"
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -103,7 +125,6 @@ export default function CreateOwnerModal({
                             <Input
                                 placeholder="Broj mobitela"
                                 name="phoneNumber"
-                                value={owner?.phoneNumber}
                                 onChange={(e) => handleInputChange(e)}
                             />
                         </FormControl>

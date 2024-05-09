@@ -51,13 +51,14 @@ export default function Owners() {
 
     const addNewOwner = (newOwner: Owner) => {
         setOwnersData(prev => [...prev, newOwner]);
-      };
+    };
 
     const handleRowClick = (id: string) => {
         navigate(`/owner/pets/${id}`)
     }
 
     return (
+        // TODO add updating owners
         <>
             <NavBarGuests />
             <Flex justifyContent={'space-between'} alignItems={'end'}>

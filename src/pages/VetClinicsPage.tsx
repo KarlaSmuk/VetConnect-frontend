@@ -1,12 +1,15 @@
-import { Card, Heading, CardBody, Box, Text, Flex } from '@chakra-ui/react'
+import { Card, Heading, CardBody, Box, Text, Flex, useDisclosure, Button } from '@chakra-ui/react'
 import NavBarGuests from '../components/NavBarGuests'
 import { useState, useEffect } from 'react'
 import { getClinics } from '../api/clinicsService'
 import { DayOfWeek } from '../enums/dayOfWeek.enum'
+import CreateClinicModal from '../components/CreateClinicModal'
+import { AddIcon } from '@chakra-ui/icons'
 
 export default function VetClinics() {
 
     const [clinicsData, setClinicsData] = useState<ClinicsDto>([])
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
         loadClinics()
@@ -23,10 +26,24 @@ export default function VetClinics() {
         }
     }
 
+    const addNewClinic = (newClinic: Clinic) => {
+        setClinicsData(prev => [...prev, newClinic]);
+      };
+
     return (
         <>
             <NavBarGuests />
-            <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
+            <Flex alignItems={'end'} justifyContent={'space-between'}>
+                <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
+                <Button onClick={onOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
+                    Dodaj novu veterinarsku stanicu
+                </Button>
+            </Flex>
+            <CreateClinicModal 
+                isOpen={isOpen}
+                onClose={onClose}
+                addNewClinic={addNewClinic}
+            />
             <Box>
                 {clinicsData.map(clinic => (
                     <Card key={clinic.id} className='m-10'>
