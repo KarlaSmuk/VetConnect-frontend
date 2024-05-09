@@ -21,3 +21,14 @@ interface Clinic {
 }
 
 type ClinicsData = Clinic[];
+
+interface Owner {
+    user: any;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    id: string;
+    photo: string;
+}
+
+type OwnersData  = Owner[];

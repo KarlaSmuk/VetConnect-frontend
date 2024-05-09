@@ -1,5 +1,5 @@
 import { Card, Heading, CardBody, Box, Text, Flex } from '@chakra-ui/react'
-import NavBarGuests from '../components/navBarGuests'
+import NavBarGuests from '../components/NavBarGuests'
 import { useState, useEffect } from 'react'
 import { getClinics } from '../api/clinicsService'
 import { DayOfWeek } from '../enums/dayOfWeek.enum'

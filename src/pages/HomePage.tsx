@@ -5,7 +5,7 @@ import calendar from '/calendar.png'
 import invoice from '/invoice.png'
 import catDogImg from '/catdog.jpg'
 import bg from '/bg.png'
-import NavBarGuests from '../components/navBarGuests'
+import NavBarGuests from '../components/NavBarGuests'
 
 export default function Home() {
     return (
