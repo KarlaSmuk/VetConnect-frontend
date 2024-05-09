@@ -20,7 +20,7 @@ interface Clinic {
     workingHours: WorkingHours[];
 }
 
-type ClinicsData = Clinic[];
+type ClinicsDto = Clinic[];
 
 interface Owner {
     user: any;
@@ -31,4 +31,12 @@ interface Owner {
     photo: string;
 }
 
-type OwnersData  = Owner[];
+type OwnersDto = Owner[];
+
+type CreateOwnerDto = {
+    firstName: string;
+    lastName: string;
+    email:string;
+    role: string;
+    phoneNumber: string;
+}

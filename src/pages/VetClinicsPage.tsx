@@ -6,7 +6,7 @@ import { DayOfWeek } from '../enums/dayOfWeek.enum'
 
 export default function VetClinics() {
 
-    const [clinicsData, setClinicsData] = useState<ClinicsData>([])
+    const [clinicsData, setClinicsData] = useState<ClinicsDto>([])
 
     useEffect(() => {
         loadClinics()
@@ -15,7 +15,7 @@ export default function VetClinics() {
     const loadClinics = async () => {
         try {
 
-            const data: ClinicsData = await getClinics();
+            const data: ClinicsDto = await getClinics();
             setClinicsData(data);
 
         } catch (error) {
@@ -52,7 +52,7 @@ export default function VetClinics() {
                     </Card>
                 ))}
             </Box>
-            
+
         </>
     )
-  }
+}

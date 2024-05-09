@@ -10,11 +10,11 @@ export default function App() {
   return (
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/clinics' element={<VetClinics />} />
+        <Route path='/clinic' element={<VetClinics />} />
         <Route path='/login' element={<Login />} />
         <Route path='/otpVerification' element={<OtpVerification />} />
         <Route path='/changePassword' element={<ChangePassword />} />
-        <Route path='/owners' element={<Owners />} />
+        <Route path='/owner' element={<Owners />} />
       </Routes>
   )
 }
