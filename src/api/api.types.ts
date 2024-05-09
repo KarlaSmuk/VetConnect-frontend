@@ -23,11 +23,11 @@ interface Clinic {
 type ClinicsDto = Clinic[];
 
 interface Owner {
+    id: string;
     user: any;
     firstName: string;
     lastName: string;
     phoneNumber: string;
-    id: string;
     photo: string;
 }
 
@@ -36,7 +36,7 @@ type OwnersDto = Owner[];
 type CreateOwnerDto = {
     firstName: string;
     lastName: string;
-    email:string;
-    role: string;
+    email: string;
+    role:string;
     phoneNumber: string;
 }

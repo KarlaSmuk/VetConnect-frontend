@@ -21,7 +21,7 @@ export default function Owners() {
     const loadOwners = async () => {
         try {
 
-            const data: OwnersDto = await getOwners();
+            const data = await getOwners();
             setOwnersData(data);
 
         } catch (error) {
@@ -48,6 +48,10 @@ export default function Owners() {
         filteredOwners = ownersData.filter(owner => (owner.user?.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
 
     }
+
+    const addNewOwner = (newOwner: Owner) => {
+        setOwnersData(prev => [...prev, newOwner]);
+      };
 
     const handleRowClick = (id: string) => {
         navigate(`/owner/pets/${id}`)
@@ -89,6 +93,7 @@ export default function Owners() {
                 <CreateOwnerModal
                     isOpen={isOpen}
                     onClose={onClose}
+                    addNewOwner={addNewOwner}
                 />
                 {/* add modal for addding new owners */}
             </Flex>

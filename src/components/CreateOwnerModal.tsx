@@ -11,44 +11,54 @@ import {
     FormLabel,
     Input
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { createOwner } from "../api/ownerPetsService";
 import { ROLE } from "../enums/roles.enum";
 
 interface CreateOwnerModalProps {
     isOpen: boolean;
     onClose: () => void;
+    addNewOwner: (owner: Owner) => void;
 }
 
 export default function CreateOwnerModal({
     isOpen,
     onClose,
+    addNewOwner
 }: CreateOwnerModalProps) {
 
     const [owner, setOwner] = useState<CreateOwnerDto>({
-        firstName: "",
-        lastName: "",
-        email: "",
+        firstName: '',
+        lastName: '',
+        email: '',
         role: ROLE.OWNER,
-        phoneNumber: "",
+        phoneNumber: ''
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        
-        setButtonDisabled(!(owner.firstName && owner.lastName && owner.email && owner.phoneNumber));
+    useEffect(() => {
+        setButtonDisabled(
+          !(owner.firstName && owner.lastName && owner.email && owner.phoneNumber)
+        );
+      }, [owner]);
 
-        const { name, value } = e.target;
-        setOwner({ ...owner, [name]: value });
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setOwner(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async () => {
-
+    const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
         try {
-            await createOwner(owner);
+            const response = await createOwner(owner);
+            if(response.success){
+                addNewOwner(response.message)
+                onClose();
+            }
+            
         } catch (error) {
-            throw("Error while creating owner. Try again!");
+            alert('Failed to create owner. Please check your input and try again.');
         }
     };
 
@@ -66,7 +76,7 @@ export default function CreateOwnerModal({
                                 placeholder="Ime"
                                 name="firstName"
                                 value={owner?.firstName}
-                                onChange={(e) => handleInputChange(e)}
+                                onChange={handleInputChange}
                             />
                         </FormControl>
                         <FormControl mt={4} isRequired>
@@ -75,7 +85,7 @@ export default function CreateOwnerModal({
                                 placeholder="Prezime"
                                 name="lastName"
                                 value={owner?.lastName}
-                                onChange={(e) => handleInputChange(e)}
+                                onChange={handleInputChange}
                             />
                         </FormControl>
                         <FormControl mt={4} isRequired>
@@ -85,7 +95,7 @@ export default function CreateOwnerModal({
                                 type="email"
                                 name="email"
                                 value={owner?.email}
-                                onChange={(e) => handleInputChange(e)}
+                                onChange={handleInputChange}
                             />
                         </FormControl>
                         <FormControl mt={4} isRequired>
