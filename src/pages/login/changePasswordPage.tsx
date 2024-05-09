@@ -1,7 +1,7 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, Text, Flex, Heading, Input, InputGroup, InputRightElement, Stack } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export default function ChangePassword() {
