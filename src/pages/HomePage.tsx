@@ -1,42 +1,61 @@
-import logo from '../../public/logo.png'
-import vetConnectText from '../../public/VetConnect.png'
-import clinic from '../../public/clinic.png'
-import calendar from '../../public/calendar.png'
-import invoice from '../../public/invoice.png'
-import dogImage from '../../public/dog.png'
-import bg from '../../public/bg.png'
-import { Link } from 'react-router-dom'
-import { Button } from '@chakra-ui/react'
-
+import { Card, CardBody, Heading, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import vetConnectText from '/VetConnect.png'
+import clinic from '/clinic.png'
+import calendar from '/calendar.png'
+import invoice from '/invoice.png'
+import catDogImg from '/catdog.jpg'
+import bg from '/bg.png'
+import NavBarGuests from '../components/navBarGuests'
 
 export default function Home() {
     return (
         <>
-            <div className='w-full h-full bg-white flex items-center justify-between '>
-                <div className='m-5 my-8 flex items-center'>
-                    {/* <img className='logo size-18' src={logo} alt='logo' /> */}
-                    <Link to='/' className='ml-4 mr-4 font-normal hover:text-cyan-500'>Naslovna</Link>
-                    <Link to='/clinics' className='mx-2	font-normal hover:text-cyan-500'>
-                        Popis veterinarskih stanica
-                    </Link>
-                </div>
-                <Link to='/login' className='mr-20'>
-                    <Button colorScheme='cyan' textColor={'white'} size='lg'>
-                        Prijavi se
-                    </Button>
-                </Link>
-            </div>
-
-            <div className='flex mt-20 items-center'>
+            <NavBarGuests />
+            <div className='flex mt-10 items-center justify-around'>
                 <div className='ml-12'>
-                    <img className='h-auto max-w-full"' src={vetConnectText} alt='logo' />
+                    <img className='h-auto max-w-full size-96' src={vetConnectText} alt='logo' />
                     <p className='text-xs font-light tracking-wide ml-5'>Povežimo ljubimce, vlasnike i veterinare.</p>
                 </div>
-                <img className='size-2/5' src={dogImage} alt='logo' />
+                <img className='size-1/3' src={catDogImg} alt='dog' />
             </div>
 
-            <div>
-                <img className='opacity' src={bg} alt='logo' />
+            <div className='relative w-full h-full flex justify-center'>
+                <img className='w-full h-full' src={bg} alt='background' />
+                    <SimpleGrid className='absolute top-20 p-4 w-full justify-evenly my-auto' spacing={4} templateColumns='repeat(3, minmax(290px, 100px))'>
+                        <Card className='flex items-center justify-center'>
+                            <CardBody className='flex flex-col items-center justify-center text-center bg-cyan-50 shadow-lg'>
+                                <Image src={clinic} className='rounded-lg' alt='clinic'/>
+                                <Stack mt='6' spacing='3'>
+                                    <Heading className='font-mono' size='md'>Veterinarske stanice</Heading>
+                                    <Text className='font-mono text-zinc-500 p-1 text-sm'>
+                                        Otkrijte veterinarske stanice. Pristupite kontakt informacijama i radnom vremenu.
+                                    </Text>
+                                </Stack>
+                            </CardBody>
+                        </Card>
+                        <Card className='flex items-center justify-center'>
+                            <CardBody className='flex flex-col items-center justify-center text-center bg-cyan-50 shadow-lg'>
+                            <Image src={calendar}  borderRadius='lg'/>
+                                <Stack mt='6' spacing='3'>
+                                    <Heading className='' size='md'>Termini</Heading>
+                                    <Text className='font-mono text-zinc-500 p-1 text-sm'>
+                                        Brzo i jednostavno zakažite termin radi bolje organiziranosti.
+                                    </Text>
+                                </Stack>
+                            </CardBody>
+                        </Card>
+                        <Card className='flex items-center justify-center'>
+                            <CardBody className='flex flex-col items-center justify-center text-center bg-cyan-50 shadow-lg'>
+                            <Image src={invoice} borderRadius='lg'/>
+                                <Stack mt='6' spacing='3'>
+                                    <Heading className='font-mono' size='md'>Zapisi i Računi</Heading>
+                                    <Text className='font-mono text-zinc-500 p-1 text-sm'>
+                                        Pristupite medicinskoj povijesti vašeg ljubimca i pogledajte račune i tretmane.
+                                    </Text>
+                                </Stack>
+                            </CardBody>
+                        </Card>
+                    </SimpleGrid>
             </div>
         </>
     )
