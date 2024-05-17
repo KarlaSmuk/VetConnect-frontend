@@ -37,15 +37,15 @@ export default function Owners() {
         const lastNamePart = parts[1]?.toLowerCase();
 
         filteredOwners = ownersData.filter(owner => {
-            const firstName = owner.firstName?.toLowerCase() ?? "";
-            const lastName = owner.lastName?.toLowerCase() ?? "";
+            const firstName = owner.user.firstName?.toLowerCase() ?? "";
+            const lastName = owner.user.lastName?.toLowerCase() ?? "";
             return firstName.includes(firstNamePart) || lastName.includes(lastNamePart || firstNamePart);
         });
 
     } else if (filterField == 'Broj mobitela') {
-        filteredOwners = ownersData.filter(owner => (owner.phoneNumber ?? "").toString().includes(filterValue))
+        filteredOwners = ownersData.filter(owner => (owner.user.phoneNumber ?? "").toString().includes(filterValue))
     } else if (filterField == 'Email') {
-        filteredOwners = ownersData.filter(owner => (owner.user?.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
+        filteredOwners = ownersData.filter(owner => (owner.user.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
 
     }
 
