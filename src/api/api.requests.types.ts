@@ -6,14 +6,14 @@ type CreateOwnerDto = {
     phoneNumber: string;
 }
 
-interface CreateWorkingHours {
-    dayOfWeek: number;
+type CreateWorkingHours = {
+    day: number;
     openingTime: string;
     closingTime: string;
     specialNotes?: string;
 }
 
-interface CreateClinicDto{
+type CreateClinicDto = {
     oib: string;
     name: string;
     address: string;

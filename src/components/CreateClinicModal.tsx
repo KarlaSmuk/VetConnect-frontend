@@ -9,12 +9,16 @@ import {
     ModalFooter,
     FormControl,
     FormLabel,
-    Input
+    Input,
+    FormHelperText,
+    Text,
+    Box
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { createClinic } from "../api/clinicsService";
+import { DayOfWeek } from "../enums/dayOfWeek.enum";
 
-interface CreateOwnerModalProps {
+interface CreateClinicModalProps {
     isOpen: boolean;
     onClose: () => void;
     addNewClinic: (clinic: Clinic) => void;
@@ -24,7 +28,7 @@ export default function CreateClinicModal({
     isOpen,
     onClose,
     addNewClinic
-}: CreateOwnerModalProps) {
+}: CreateClinicModalProps) {
 
     const [clinic, setClinic] = useState<CreateClinicDto>({
         oib: '',
@@ -34,16 +38,24 @@ export default function CreateClinicModal({
         county: '',
         phoneNumber: '',
         webAddress: '',
-        workingHours: []
+        workingHours: [
+            { day: 1, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 2, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 3, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 4, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 5, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 6, openingTime: '', closingTime: '', specialNotes: '' },
+            { day: 7, openingTime: '', closingTime: '', specialNotes: '' }
+        ]
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     useEffect(() => {
         setButtonDisabled(
-          !(clinic.oib && clinic.name && clinic.email && clinic.phoneNumber && clinic.address && clinic.workingHours && clinic.county)
+            !(clinic.oib && clinic.name && clinic.email && clinic.phoneNumber && clinic.address && clinic.workingHours && clinic.county)
         );
-      }, [clinic]);
+    }, [clinic]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -54,13 +66,13 @@ export default function CreateClinicModal({
         event.preventDefault()
         try {
             const response = await createClinic(clinic);
-            if(response.success){
+            if (response.success) {
                 addNewClinic(response.message)
                 onClose();
             }
-            
+
         } catch (error) {
-            throw('Failed to create owner. Please check your input and try again.');
+            throw ('Failed to create owner. Please check your input and try again.');
         }
     };
 
@@ -77,6 +89,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="OIB"
                                 name="oib"
+                                value={clinic.oib}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -85,6 +98,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Ime"
                                 name="name"
+                                value={clinic.name}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -93,6 +107,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Email"
                                 name="email"
+                                value={clinic.email}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -101,6 +116,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Web stranica"
                                 name="webaddress"
+                                value={clinic.webAddress}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -109,6 +125,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Adresa"
                                 name="address"
+                                value={clinic.address}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -117,6 +134,7 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Županija"
                                 name="county"
+                                value={clinic.county}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
@@ -125,8 +143,27 @@ export default function CreateClinicModal({
                             <Input
                                 placeholder="Broj mobitela"
                                 name="phoneNumber"
+                                value={clinic.phoneNumber}
                                 onChange={(e) => handleInputChange(e)}
                             />
+                        </FormControl>
+
+                        <FormControl mt={4} isRequired>
+                            <FormLabel>Radno vrijeme</FormLabel>
+                            {clinic.workingHours.map((day, index) => (
+                                <Box my={5}>
+                                    <Text fontSize={'small'} fontWeight='bold'>{DayOfWeek[day.day]}</Text>
+                                    <FormHelperText>Od:</FormHelperText>
+                                    <Input name="openingTime" value={day.openingTime} type='time'  isRequired/>
+                                    <FormHelperText>Do:</FormHelperText>
+                                    <Input name="closingTime" value={day.closingTime} type='time'  isRequired/>
+                                    <FormHelperText>Napomena:</FormHelperText>
+                                    <Input name='specialNotes' value={day.closingTime} type='text' />
+                                    {/* clinic.workingHours[index] */}
+                                </Box>
+
+                            ))}
+                            
                         </FormControl>
                     </ModalBody>
                     <ModalFooter>

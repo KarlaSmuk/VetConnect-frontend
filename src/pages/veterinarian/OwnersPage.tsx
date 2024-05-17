@@ -115,15 +115,13 @@ export default function Owners() {
                                 onClick={() => handleRowClick(owner.id)}
                             >
                                 <Td>
-                                    {owner.photo &&
-                                        <Avatar src={owner.photo} />
-                                    }
-                                    {!owner.photo &&
-                                        <Avatar size={'md'} />
-                                    }
+                                    <Avatar
+                                        src={`https://lh3.googleusercontent.com/d/${owner.user.photo}`}
+                                        name={`${owner.user.firstName} ${owner.user.lastName}`}
+                                    />
                                 </Td>
-                                <Td>{owner.firstName} {owner.lastName}</Td>
-                                <Td>{owner.phoneNumber}</Td>
+                                <Td>{owner.user.firstName} {owner.user.lastName}</Td>
+                                <Td>{owner.user.phoneNumber}</Td>
                                 <Td>{owner.user.email}</Td>
                             </Tr>
 
