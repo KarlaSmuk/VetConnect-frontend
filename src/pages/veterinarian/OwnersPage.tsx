@@ -1,9 +1,9 @@
-import { Avatar, Heading, Select, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure } from '@chakra-ui/react'
+import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import NavBarGuests from '../../components/NavBarGuests'
 import { getOwners } from '../../api/ownerPetsService'
 import { useNavigate } from 'react-router-dom'
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import CreateOwnerModal from '../../components/CreateOwnerModal'
 
 export default function Owners() {
@@ -11,6 +11,8 @@ export default function Owners() {
     const [ownersData, setOwnersData] = useState<OwnersDto>([])
     const [filterValue, setFilterValue] = useState('');
     const [filterField, setFilterField] = useState('Ime i prezime');
+    const [ownerListPage, setOwnersListPage] = useState(10);
+    const [prevOwnerListPage, setPrevOwnersListPage] = useState(0);
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -46,7 +48,6 @@ export default function Owners() {
         filteredOwners = ownersData.filter(owner => (owner.user.phoneNumber ?? "").toString().includes(filterValue))
     } else if (filterField == 'Email') {
         filteredOwners = ownersData.filter(owner => (owner.user.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
-
     }
 
     const addNewOwner = (newOwner: Owner) => {
@@ -106,10 +107,11 @@ export default function Owners() {
                             <Th>Ime i prezime</Th>
                             <Th>Broj mobitela</Th>
                             <Th>Email</Th>
+                            <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filteredOwners.map(owner => (
+                        {filteredOwners.slice(prevOwnerListPage, ownerListPage).map(owner => (
                             <Tr key={owner.id}
                                 className='cursor-pointer'
                                 onClick={() => handleRowClick(owner.id)}
@@ -129,7 +131,26 @@ export default function Owners() {
                     </Tbody>
                 </Table>
             </TableContainer>
-
+            <Flex flexDirection={'column'} justifyContent={'end'} alignItems={'end'} marginRight={20} marginTop={3}>
+                <Text fontSize='xs' color={'GrayText'} className=''>Ukupno vlasnika: {filteredOwners.length}</Text>
+                <Flex flexDirection={'row'} marginBottom={5}>
+                    <Button onClick={() =>{
+                        if(ownerListPage > 10){
+                            
+                            setPrevOwnersListPage(prevOwnerListPage - 10);
+                            setOwnersListPage(ownerListPage - 10);
+                        
+                        }
+                    }} className='mt-2'><ArrowBackIcon /></Button>
+                    <Button onClick={() =>{
+                        if(ownerListPage < filteredOwners.length){
+                            setPrevOwnersListPage(prevOwnerListPage + 10);
+                            setOwnersListPage(ownerListPage + 10);
+                        }
+                        
+                    }}  className='mt-2 ml-5'><ArrowForwardIcon /></Button>
+                </Flex>
+            </Flex>
         </>
     )
 }
