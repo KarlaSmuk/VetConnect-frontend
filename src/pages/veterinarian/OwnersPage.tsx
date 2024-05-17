@@ -161,6 +161,7 @@ export default function Owners() {
                         {filteredOwners.slice(prevOwnerListPage, ownerListPage).map(owner => (
                             <Tr key={owner.id}
                                 className='cursor-pointer'
+                                _hover={{color: "teal"}}
                                 onClick={() => handleRowClick(owner.id)}
                             >
                                 <Td verticalAlign={'end'}>
@@ -197,7 +198,7 @@ export default function Owners() {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <Flex flexDirection={'column'} justifyContent={'end'} alignItems={'end'} marginRight={20} marginTop={3}>
+            <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3}>
                 <Text fontSize='xs' color={'GrayText'} className=''>Ukupno vlasnika: {filteredOwners.length}</Text>
                 <Flex flexDirection={'row'} marginBottom={5}>
                     <Button onClick={() => {
