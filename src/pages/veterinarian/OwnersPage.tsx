@@ -4,7 +4,7 @@ import NavBarGuests from '../../components/NavBarGuests'
 import { getOwners } from '../../api/ownerPetsService'
 import { useNavigate } from 'react-router-dom'
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon, EditIcon, EmailIcon } from '@chakra-ui/icons'
-import { deleteUser } from '../../api/userService'
+import { deleteUser, sendOTP } from '../../api/userService'
 import { ROLE } from '../../enums/roles.enum'
 import CreateUserModal from '../../components/CreateUserModal'
 import UpdateUserModal from '../../components/UpdateUserModal'
@@ -94,8 +94,14 @@ export default function Owners() {
         
     };
 
-    const handleSendOTP = async (e: any) => {
-        e.stopPropagation(); //dont use parent default
+    const handleSendOTP = async (userId: string) => {
+        try {
+            const response = await sendOTP(userId);
+            console.log(response)
+        } catch (error) {
+            console.error("Error deleting user:", error);
+        }
+
     };
 
     return (
@@ -180,7 +186,10 @@ export default function Owners() {
                                         updateExistingUser={updateUser}
                                     />
                                     <IconButton icon={<DeleteIcon />} onClick={handleDelete(owner.user.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete user'} bgColor={'transparent'} />
-                                    <IconButton icon={<EmailIcon />} onClick={handleSendOTP} boxSize={6} color={'blue'} marginLeft={7} aria-label={'Send email'} bgColor={'transparent'} />
+                                    <IconButton icon={<EmailIcon />} onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSendOTP(owner.user.id);
+                                    }} boxSize={6} color={'blue'} marginLeft={7} aria-label={'Send email'} bgColor={'transparent'} />
                                 </Td>
                             </Tr>
 

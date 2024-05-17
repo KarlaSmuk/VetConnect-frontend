@@ -33,3 +33,14 @@ export const deleteUser = async (userId: string) => {
   }
 
 };
+
+export const sendOTP = async (userId: string) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/otp/sendOTP/` + userId);
+    return response.data;
+  } catch (error) {
+    console.error("Error during creating owner:", error);
+    throw error;
+  }
+
+};
