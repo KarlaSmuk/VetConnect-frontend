@@ -31,6 +31,12 @@ export default function Owners() {
         }
     }
 
+
+    useEffect(() => {
+        setOwnersListPage(10);
+        setPrevOwnersListPage(0);
+    }, [filterValue, filterField]);
+
     let filteredOwners = ownersData;
     if (filterField == 'Ime i prezime') {
 
@@ -59,7 +65,6 @@ export default function Owners() {
     }
 
     return (
-        // TODO add updating owners
         <>
             <NavBarGuests />
             <Flex justifyContent={'space-between'} alignItems={'end'}>
@@ -81,7 +86,9 @@ export default function Owners() {
                             className='cursor-pointer'
                             placeholder='Pretraži po'
                             value={filterField}
-                            onChange={e => setFilterField(e.target.value)}
+                            onChange={e => {
+                                setFilterField(e.target.value);
+                            }}
                         >
                             <option value='Ime i prezime'>Ime i prezime</option>
                             <option value='Broj mobitela'>Broj mobitela</option>
@@ -136,10 +143,8 @@ export default function Owners() {
                 <Flex flexDirection={'row'} marginBottom={5}>
                     <Button onClick={() =>{
                         if(ownerListPage > 10){
-                            
                             setPrevOwnersListPage(prevOwnerListPage - 10);
                             setOwnersListPage(ownerListPage - 10);
-                        
                         }
                     }} className='mt-2'><ArrowBackIcon /></Button>
                     <Button onClick={() =>{
