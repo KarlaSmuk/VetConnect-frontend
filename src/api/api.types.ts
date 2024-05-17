@@ -22,7 +22,7 @@ interface Clinic {
 
 type ClinicsDto = Clinic[];
 
-interface Owner {
+interface User {
     id: string;
     user: any;
     firstName: string;
@@ -31,4 +31,4 @@ interface Owner {
     photo: string;
 }
 
-type OwnersDto = Owner[];
+type UsersDto = User[];

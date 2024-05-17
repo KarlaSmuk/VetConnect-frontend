@@ -12,26 +12,30 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { createOwner } from "../api/ownerPetsService";
+import { updateUser } from "../api/userService";
 import { ROLE } from "../enums/roles.enum";
 
-interface CreateOwnerModalProps {
+interface CreateUserModalProps {
     isOpen: boolean;
     onClose: () => void;
-    addNewOwner: (owner: Owner) => void;
+    userId: string;
+    role: ROLE;
+    updateExistingUser: (user: User) => void;
 }
 
-export default function CreateOwnerModal({
+export default function UpdateUserModal({
     isOpen,
     onClose,
-    addNewOwner
-}: CreateOwnerModalProps) {
+    userId,    
+    role,
+    updateExistingUser
+}: CreateUserModalProps) {
 
-    const [owner, setOwner] = useState<CreateOwnerDto>({
+    const [user, setUser] = useState<UpdateUserDto>({
+        id: userId,
         firstName: '',
         lastName: '',
         email: '',
-        role: ROLE.OWNER,
         phoneNumber: ''
     });
 
@@ -39,26 +43,27 @@ export default function CreateOwnerModal({
 
     useEffect(() => {
         setButtonDisabled(
-          !(owner.firstName && owner.lastName && owner.email && owner.phoneNumber)
+          !(user.firstName || user.lastName || user.email || user.phoneNumber)
         );
-      }, [owner]);
+      }, [user]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setOwner(prev => ({ ...prev, [name]: value }));
+        setUser(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
+        event.preventDefault();
+        event.stopPropagation();
         try {
-            const response = await createOwner(owner);
+            const response = await updateUser(user);
+            console.log(response)
             if(response.success){
-                addNewOwner(response.message)
+                updateExistingUser(response.message)
                 onClose();
             }
-            
         } catch (error) {
-            throw('Failed to create owner. Please check your input and try again.');
+            throw('Failed to update user. Please check your input and try again.');
         }
     };
 
@@ -67,43 +72,43 @@ export default function CreateOwnerModal({
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Dodaj novog vlasnika</ModalHeader>
+                    <ModalHeader>Uredi podatke {role == ROLE.OWNER ? 'vlasnika' : 'veterinara'}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <FormControl isRequired>
+                        <FormControl>
                             <FormLabel>Ime</FormLabel>
                             <Input
                                 placeholder="Ime"
                                 name="firstName"
-                                value={owner?.firstName}
+                                value={user?.firstName}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Prezime</FormLabel>
                             <Input
                                 placeholder="Prezime"
                                 name="lastName"
-                                value={owner?.lastName}
+                                value={user?.lastName}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Email</FormLabel>
                             <Input
                                 placeholder="Email"
                                 type="email"
                                 name="email"
-                                value={owner?.email}
+                                value={user?.email}
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Broj mobitela</FormLabel>
                             <Input
                                 placeholder="Broj mobitela"
                                 name="phoneNumber"
-                                value={owner?.phoneNumber}
+                                value={user?.phoneNumber}
                                 onChange={(e) => handleInputChange(e)}
                             />
                         </FormControl>

@@ -1,20 +1,34 @@
-import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure } from '@chakra-ui/react'
+import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure, IconButton } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import NavBarGuests from '../../components/NavBarGuests'
 import { getOwners } from '../../api/ownerPetsService'
 import { useNavigate } from 'react-router-dom'
-import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import CreateOwnerModal from '../../components/CreateOwnerModal'
+import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon, EditIcon, EmailIcon } from '@chakra-ui/icons'
+import { deleteUser } from '../../api/userService'
+import { ROLE } from '../../enums/roles.enum'
+import CreateUserModal from '../../components/CreateUserModal'
+import UpdateUserModal from '../../components/UpdateUserModal'
 
 export default function Owners() {
 
-    const [ownersData, setOwnersData] = useState<OwnersDto>([])
+    const [ownersData, setOwnersData] = useState<UsersDto>([])
     const [filterValue, setFilterValue] = useState('');
     const [filterField, setFilterField] = useState('Ime i prezime');
     const [ownerListPage, setOwnersListPage] = useState(10);
     const [prevOwnerListPage, setPrevOwnersListPage] = useState(0);
     const navigate = useNavigate();
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {
+        isOpen: isCreateOpen,
+        onOpen: onCreateOpen,
+        onClose: onCreateClose
+    } = useDisclosure();
+    
+    const {
+        isOpen: isUpdateOpen,
+        onOpen: onUpdateOpen,
+        onClose: onUpdateClose
+    } = useDisclosure();
+    
 
     useEffect(() => {
         loadOwners()
@@ -56,13 +70,33 @@ export default function Owners() {
         filteredOwners = ownersData.filter(owner => (owner.user.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
     }
 
-    const addNewOwner = (newOwner: Owner) => {
-        setOwnersData(prev => [...prev, newOwner]);
+    const addNewUser = (newUser: User) => {
+        setOwnersData(prev => [...prev, newUser]);
+    };
+
+    const updateUser = (updatedUser: User) => {
+        setOwnersData(prev => prev.map(user => user.id === updatedUser.id ? updatedUser : user));
     };
 
     const handleRowClick = (id: string) => {
         navigate(`/owner/pets/${id}`)
     }
+
+    const handleDelete = (id: string) => async (e: any) => {
+        e.stopPropagation(); //dont use parent default
+        try {
+            const response = await deleteUser(id);
+            setOwnersData(prev => prev.filter(owner => owner.user.id !== id));
+            console.log(response)
+        } catch (error) {
+            console.error("Error deleting user:", error);
+        }
+        
+    };
+
+    const handleSendOTP = async (e: any) => {
+        e.stopPropagation(); //dont use parent default
+    };
 
     return (
         <>
@@ -96,15 +130,15 @@ export default function Owners() {
                         </Select>
                     </Box>
                 </Flex>
-                <Button onClick={onOpen} leftIcon={<AddIcon />} colorScheme='green' width={'200px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
+                <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'200px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
                     Dodaj novog vlasnika
                 </Button>
-                <CreateOwnerModal
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    addNewOwner={addNewOwner}
+                <CreateUserModal
+                    isOpen={isCreateOpen}
+                    onClose={onCreateClose}
+                    role={ROLE.OWNER}
+                    addNewUser={addNewUser}
                 />
-                {/* add modal for addding new owners */}
             </Flex>
             <TableContainer mt={5}>
                 <Table variant='striped' colorScheme='gray'>
@@ -123,15 +157,31 @@ export default function Owners() {
                                 className='cursor-pointer'
                                 onClick={() => handleRowClick(owner.id)}
                             >
-                                <Td>
+                                <Td verticalAlign={'end'}>
                                     <Avatar
                                         src={`https://lh3.googleusercontent.com/d/${owner.user.photo}`}
                                         name={`${owner.user.firstName} ${owner.user.lastName}`}
+
                                     />
                                 </Td>
                                 <Td>{owner.user.firstName} {owner.user.lastName}</Td>
                                 <Td>{owner.user.phoneNumber}</Td>
                                 <Td>{owner.user.email}</Td>
+                                <Td>
+                                    <IconButton icon={<EditIcon />} onClick={(e) => {
+                                        e.stopPropagation()
+                                        onUpdateOpen()
+                                    }} boxSize={6} color={'green'} aria-label={'Update user'} bgColor={'transparent'} />
+                                    <UpdateUserModal
+                                        isOpen={isUpdateOpen}
+                                        onClose={onUpdateClose}
+                                        userId={owner.user.id}
+                                        role={ROLE.OWNER}
+                                        updateExistingUser={updateUser}
+                                    />
+                                    <IconButton icon={<DeleteIcon />} onClick={handleDelete(owner.user.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete user'} bgColor={'transparent'} />
+                                    <IconButton icon={<EmailIcon />} onClick={handleSendOTP} boxSize={6} color={'blue'} marginLeft={7} aria-label={'Send email'} bgColor={'transparent'} />
+                                </Td>
                             </Tr>
 
                         ))}
@@ -141,19 +191,19 @@ export default function Owners() {
             <Flex flexDirection={'column'} justifyContent={'end'} alignItems={'end'} marginRight={20} marginTop={3}>
                 <Text fontSize='xs' color={'GrayText'} className=''>Ukupno vlasnika: {filteredOwners.length}</Text>
                 <Flex flexDirection={'row'} marginBottom={5}>
-                    <Button onClick={() =>{
-                        if(ownerListPage > 10){
+                    <Button onClick={() => {
+                        if (ownerListPage > 10) {
                             setPrevOwnersListPage(prevOwnerListPage - 10);
                             setOwnersListPage(ownerListPage - 10);
                         }
                     }} className='mt-2'><ArrowBackIcon /></Button>
-                    <Button onClick={() =>{
-                        if(ownerListPage < filteredOwners.length){
+                    <Button onClick={() => {
+                        if (ownerListPage < filteredOwners.length) {
                             setPrevOwnersListPage(prevOwnerListPage + 10);
                             setOwnersListPage(ownerListPage + 10);
                         }
-                        
-                    }}  className='mt-2 ml-5'><ArrowForwardIcon /></Button>
+
+                    }} className='mt-2 ml-5'><ArrowForwardIcon /></Button>
                 </Flex>
             </Flex>
         </>

@@ -10,15 +10,3 @@ export const getOwners = async () => {
   }
   
 };
-
-export const createOwner = async (ownerData: CreateOwnerDto) => {
-  try {
-    console.log(ownerData)
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user`, ownerData);
-    return response.data;
-  } catch (error) {
-    console.error("Error during creating owner:", error);
-    throw error;
-  }
-  
-};
