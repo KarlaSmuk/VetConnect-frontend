@@ -31,3 +31,26 @@ type CreateClinicDto = {
     webAddress?: string;
     workingHours: CreateWorkingHours[];
 }
+
+type UpdateClinicInfoDto = {
+    id: string;
+    oib?: string;
+    name?: string;
+    address?: string;
+    county?: string;
+    phoneNumber?: string;
+    email?: string;
+    webAddress?: string;
+}
+
+type UpdateWorkingHours = {
+    day: number;
+    openingTime?: string;
+    closingTime?: string;
+    specialNotes?: string;
+}
+
+type UpdateWorkingHoursDto = {
+    clinicId: string;
+    workingHours: CreateWorkingHours[];
+}

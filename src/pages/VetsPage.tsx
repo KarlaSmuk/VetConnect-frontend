@@ -1,25 +1,25 @@
 import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure, IconButton } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import NavBarGuests from '../../components/NavBarGuests'
-import { getOwners } from '../../api/ownerPetsService'
-import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon, EditIcon, EmailIcon } from '@chakra-ui/icons'
-import { deleteUser, sendOTP } from '../../api/userService'
-import { ROLE } from '../../enums/roles.enum'
-import CreateUserModal from '../../components/modals/CreateUserModal'
-import UpdateUserModal from '../../components/modals/UpdateUserModal'
+import { deleteUser, sendOTP } from '../api/userService'
+import CreateUserModal from '../components/modals/CreateUserModal'
+import UpdateUserModal from '../components/modals/UpdateUserModal'
+import NavBarGuests from '../components/NavBarGuests'
+import { ROLE } from '../enums/roles.enum'
+import { getVetsByClinicId } from '../api/veterinarianService'
+import { getClinicById } from '../api/clinicsService'
 
-export default function Owners() {
+export default function Vets() {
 
-    const [ownersData, setOwnersData] = useState<UsersDto>([])
+    const [vetsData, setVetsData] = useState<UsersDto>([])
+    const [clinicData, setClinicData] = useState<Clinic>()
     const [filterValue, setFilterValue] = useState('');
     const [filterField, setFilterField] = useState('Ime i prezime');
-    const [ownerListPage, setOwnersListPage] = useState(10);
-    const [prevOwnerListPage, setPrevOwnersListPage] = useState(0);
+    const [vetsListPage, setVetsListPage] = useState(10);
+    const [prevVetsListPage, setPrevVetsListPage] = useState(0);
 
     const [selectedUserId, setSelectedUserId] = useState('');
-
-    const navigate = useNavigate();
 
     const {
         isOpen: isCreateOpen,
@@ -32,17 +32,25 @@ export default function Owners() {
         onOpen: onUpdateOpen,
         onClose: onUpdateClose
     } = useDisclosure();
+
+    const location = useLocation()
     
 
     useEffect(() => {
-        loadOwners()
+        loadVets()
     }, [])
 
-    const loadOwners = async () => {
+
+    const loadVets = async () => {
         try {
 
-            const data = await getOwners();
-            setOwnersData(data);
+            const data = await getVetsByClinicId(location.state.clinicId);
+            setVetsData(data);
+
+            console.log(vetsData);
+
+            const clinic = await getClinicById(location.state.clinicId);
+            setClinicData(clinic);
 
         } catch (error) {
             console.error("Error geting clinics:", error);
@@ -51,55 +59,49 @@ export default function Owners() {
 
 
     useEffect(() => {
-        setOwnersListPage(10);
-        setPrevOwnersListPage(0);
+        setVetsListPage(10);
+        setPrevVetsListPage(0);
     }, [filterValue, filterField]);
 
-    let filteredOwners = ownersData;
+    let filteredVets = vetsData;
     if (filterField == 'Ime i prezime') {
 
         const parts = filterValue.trim().split(' ');
         const firstNamePart = parts[0]?.toLowerCase();
         const lastNamePart = parts[1]?.toLowerCase();
 
-        filteredOwners = ownersData.filter(owner => {
-            const firstName = owner.user.firstName?.toLowerCase() ?? "";
-            const lastName = owner.user.lastName?.toLowerCase() ?? "";
+        filteredVets = vetsData.filter(vet => {
+            const firstName = vet.user.firstName?.toLowerCase() ?? "";
+            const lastName = vet.user.lastName?.toLowerCase() ?? "";
             return firstName.includes(firstNamePart) || lastName.includes(lastNamePart || firstNamePart);
         });
 
     } else if (filterField == 'Broj mobitela') {
-        filteredOwners = ownersData.filter(owner => (owner.user.phoneNumber ?? "").toString().includes(filterValue))
+        filteredVets = vetsData.filter(vet => (vet.user.phoneNumber ?? "").toString().includes(filterValue))
     } else if (filterField == 'Email') {
-        filteredOwners = ownersData.filter(owner => (owner.user.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
+        filteredVets = vetsData.filter(vet => (vet.user.email ?? "").toLowerCase().includes(filterValue.toLowerCase()))
     }
 
     const addNewUser = (newUser: User) => {
-        setOwnersData(prev => [...prev, newUser]);
+        setVetsData(prev => [...prev, newUser]);
     };
 
     const updateUser = (updatedUser: User) => {
-        setOwnersData(prev => prev.map(user => user.id === updatedUser.id ? updatedUser : user));
+        setVetsData(prev => prev.map(user => user.id === updatedUser.id ? updatedUser : user));
     };
 
-    const handleRowClick = (id: string) => {
-        navigate(`/owner/pets/${id}`)
-    }
-
-    const handleDelete = (id: string) => async (e: any) => {
-        e.stopPropagation(); //dont use parent default
+    const handleDelete = async (id: string) => {
         try {
             await deleteUser(id);
-
-            setOwnersData(prev => {
-                const updatedOwners = prev.filter(owner => owner.user.id !== id);
+            setVetsData(prev => {
+                const updatedVets = prev.filter(vet => vet.user.id !== id);
     
-                if (updatedOwners.length <= 10) {
-                    setOwnersListPage(10);
-                    setPrevOwnersListPage(0);
+                if (updatedVets.length <= 10) {
+                    setVetsListPage(10);
+                    setPrevVetsListPage(0);
                 }
     
-                return updatedOwners;
+                return updatedVets;
             });
             
         } catch (error) {
@@ -121,9 +123,12 @@ export default function Owners() {
     return (
         <>
             <NavBarGuests />
+            <Flex justifyContent={'center'}>
+                <Heading  size='xl' className='mt-10 mb-3 ml-5'> {clinicData?.name}</Heading>
+            </Flex>
             <Flex justifyContent={'space-between'} alignItems={'end'}>
                 <Flex direction={'column'}>
-                    <Heading size='lg' className='my-10 ml-5'>Vlasnici</Heading>
+                    <Heading size='lg' className='my-10 ml-5'>Veterinari</Heading>
                     <Box ml={5}>
                         <Heading size='sm' mb={3}>Pretraži:</Heading>
                         <Input
@@ -151,12 +156,13 @@ export default function Owners() {
                     </Box>
                 </Flex>
                 <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'200px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
-                    Dodaj novog vlasnika
+                    Dodaj novog veterinara
                 </Button>
                 <CreateUserModal
                     isOpen={isCreateOpen}
                     onClose={onCreateClose}
-                    role={ROLE.OWNER}
+                    role={ROLE.VET}
+                    clinicId={location.state.clinicId}
                     addNewUser={addNewUser}
                 />
             </Flex>
@@ -172,39 +178,35 @@ export default function Owners() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filteredOwners.slice(prevOwnerListPage, ownerListPage).map(owner => (
-                            <Tr key={owner.id}
-                                className='cursor-pointer'
-                                _hover={{color: "teal"}}
-                                onClick={() => handleRowClick(owner.id)}
+                        {filteredVets.slice(prevVetsListPage, vetsListPage).map(vet => (
+                            <Tr key={vet.id}
                             >
                                 <Td verticalAlign={'end'}>
                                     <Avatar
-                                        src={`https://lh3.googleusercontent.com/d/${owner.user.photo}`}
-                                        name={`${owner.user.firstName} ${owner.user.lastName}`}
+                                        src={`https://lh3.googleusercontent.com/d/${vet.user.photo}`}
+                                        name={`${vet.user.firstName} ${vet.user.lastName}`}
 
                                     />
                                 </Td>
-                                <Td>{owner.user.firstName} {owner.user.lastName}</Td>
-                                <Td>{owner.user.phoneNumber}</Td>
-                                <Td>{owner.user.email}</Td>
+                                <Td>{vet.user.firstName} {vet.user.lastName}</Td>
+                                <Td>{vet.user.phoneNumber}</Td>
+                                <Td>{vet.user.email}</Td>
                                 <Td>
-                                    <IconButton icon={<EditIcon />} onClick={(e) => {
-                                        e.stopPropagation()
-                                        setSelectedUserId(owner.user.id);
+                                    <IconButton icon={<EditIcon />} onClick={() => {
+                                        setSelectedUserId(vet.user.id);
                                         onUpdateOpen()
                                     }} boxSize={6} color={'green'} aria-label={'Update user'} bgColor={'transparent'} />
                                     <UpdateUserModal
                                         isOpen={isUpdateOpen}
                                         onClose={onUpdateClose}
                                         userId={selectedUserId}
-                                        role={ROLE.OWNER}
+                                        role={ROLE.VET}
                                         updateExistingUser={updateUser}
                                     />
-                                    <IconButton icon={<DeleteIcon />} onClick={handleDelete(owner.user.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete user'} bgColor={'transparent'} />
+                                    <IconButton icon={<DeleteIcon />} onClick={() => handleDelete(vet.user.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete user'} bgColor={'transparent'} />
                                     <IconButton icon={<EmailIcon />} onClick={(e) => {
                                         e.stopPropagation();
-                                        handleSendOTP(owner.user.id);
+                                        handleSendOTP(vet.user.id);
                                     }} boxSize={6} color={'blue'} marginLeft={7} aria-label={'Send email'} bgColor={'transparent'} />
                                 </Td>
                             </Tr>
@@ -214,19 +216,19 @@ export default function Owners() {
                 </Table>
             </TableContainer>
             <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3}>
-                <Text fontSize='xs' color={'GrayText'} className=''>Ukupno vlasnika: {filteredOwners.length}</Text>
-                {(filteredOwners.length > 10) &&
+                <Text fontSize='xs' color={'GrayText'} className=''>Ukupno veterinara: {filteredVets.length}</Text>
+                {(filteredVets.length > 10) &&
                     <Flex flexDirection={'row'} marginBottom={5}>
                         <Button onClick={() => {
-                            if (ownerListPage > 10) {
-                                setPrevOwnersListPage(prevOwnerListPage - 10);
-                                setOwnersListPage(ownerListPage - 10);
+                            if (vetsListPage > 10) {
+                                setPrevVetsListPage(prevVetsListPage - 10);
+                                setVetsListPage(vetsListPage - 10);
                             }
                         }} className='mt-2'><ArrowBackIcon /></Button>
                         <Button onClick={() => {
-                            if (ownerListPage < filteredOwners.length) {
-                                setPrevOwnersListPage(prevOwnerListPage + 10);
-                                setOwnersListPage(ownerListPage + 10);
+                            if (vetsListPage < filteredVets.length) {
+                                setPrevVetsListPage(prevVetsListPage + 10);
+                                setVetsListPage(vetsListPage + 10);
                             }
 
                         }} className='mt-2 ml-5'><ArrowForwardIcon /></Button>

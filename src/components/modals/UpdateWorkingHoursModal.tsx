@@ -15,29 +15,25 @@ import {
     Box
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { createClinic } from "../api/clinicsService";
-import { DayOfWeek } from "../enums/dayOfWeek.enum";
+import { updateWorkingHours } from "../../api/clinicsService";
+import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 
-interface CreateClinicModalProps {
+interface UpdateWorkingHoursModalProps {
     isOpen: boolean;
     onClose: () => void;
-    addNewClinic: (clinic: Clinic) => void;
+    clinicId: string;
+    updateClinic: (clinic: Clinic) => void;
 }
 
-export default function CreateClinicModal({
+export default function UpdateWorkingHours({
     isOpen,
     onClose,
-    addNewClinic
-}: CreateClinicModalProps) {
+    clinicId,
+    updateClinic
+}: UpdateWorkingHoursModalProps) {
 
-    const [clinic, setClinic] = useState<CreateClinicDto>({
-        oib: '',
-        name: '',
-        email: '',
-        address: '',
-        county: '',
-        phoneNumber: '',
-        webAddress: '',
+    const [clinic, setClinic] = useState<UpdateWorkingHoursDto>({
+        clinicId: clinicId,
         workingHours: [
             { day: 1, openingTime: '', closingTime: '', specialNotes: '' },
             { day: 2, openingTime: '', closingTime: '', specialNotes: '' },
@@ -53,14 +49,11 @@ export default function CreateClinicModal({
 
     useEffect(() => {
         setButtonDisabled(
-            !(clinic.oib && clinic.name && clinic.email && clinic.phoneNumber && clinic.address && clinic.workingHours && clinic.county)
+            (clinic.workingHours.every(wh => 
+                !wh.openingTime && !wh.closingTime && !wh.specialNotes
+            ))
         );
     }, [clinic]);
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setClinic(prev => ({ ...prev, [name]: value }));
-    };
 
     const handleTimeChange = (index: number, field: string, value: string) => {
         const updatedHours = clinic.workingHours.map((day, i) =>
@@ -82,88 +75,25 @@ export default function CreateClinicModal({
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {
-            const response = await createClinic(clinic);
+            const response = await updateWorkingHours(clinic);
             if (response.success) {
-                addNewClinic(response.message);
+                updateClinic(response.message);
                 onClose();
             }
 
         } catch (error) {
-            console.error('Error during creating clinic.');
+            console.error("Error during updating clinic's working hours.");
         }
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Dodaj novu veterinarsku stanicu</ModalHeader>
+                <ModalHeader>Uredi radno vrijeme</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <FormControl isRequired>
-                        <FormLabel>OIB</FormLabel>
-                        <Input
-                            placeholder="OIB"
-                            name="oib"
-                            value={clinic.oib}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
-                        <FormLabel>Ime</FormLabel>
-                        <Input
-                            placeholder="Ime"
-                            name="name"
-                            value={clinic.name}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                            placeholder="Email"
-                            name="email"
-                            value={clinic.email}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Web stranica</FormLabel>
-                        <Input
-                            placeholder="Web stranica"
-                            name="webAddress"
-                            value={clinic.webAddress}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
-                        <FormLabel>Adresa</FormLabel>
-                        <Input
-                            placeholder="Adresa"
-                            name="address"
-                            value={clinic.address}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
-                        <FormLabel>Županija</FormLabel>
-                        <Input
-                            placeholder="Županija"
-                            name="county"
-                            value={clinic.county}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
-                        <FormLabel>Broj mobitela</FormLabel>
-                        <Input
-                            placeholder="Broj mobitela"
-                            name="phoneNumber"
-                            value={clinic.phoneNumber}
-                            onChange={handleInputChange}
-                        />
-                    </FormControl>
-                    <FormControl mt={4} isRequired>
                         <FormLabel>Radno vrijeme</FormLabel>
                         {clinic.workingHours.map((day, index) => (
                             <Box key={index} my={5}>

@@ -5,6 +5,7 @@ import Login from "./pages/login/LoginPage";
 import OtpVerification from "./pages/login/OtpPage";
 import ChangePassword from "./pages/login/ChangePasswordPage";
 import Owners from "./pages/veterinarian/OwnersPage";
+import Vets from "./pages/VetsPage";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path='/otpVerification' element={<OtpVerification />} />
         <Route path='/changePassword' element={<ChangePassword />} />
         <Route path='/owners' element={<Owners />} />
+        <Route path='/veterinarians/:id' element={<Vets />} />
       </Routes>
   )
 }

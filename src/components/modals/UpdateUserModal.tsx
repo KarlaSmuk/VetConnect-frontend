@@ -12,37 +12,45 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { ROLE } from "../enums/roles.enum";
-import { createUser } from "../api/userService";
-
+import { updateUser } from "../../api/userService";
+import { ROLE } from "../../enums/roles.enum";
 
 interface CreateUserModalProps {
     isOpen: boolean;
     onClose: () => void;
+    userId: string;
     role: ROLE;
-    addNewUser: (user: User) => void;
+    updateExistingUser: (user: User) => void;
 }
 
-export default function CreateUserModal({
+export default function UpdateUserModal({
     isOpen,
     onClose,
+    userId,    
     role,
-    addNewUser
+    updateExistingUser
 }: CreateUserModalProps) {
 
-    const [user, setUser] = useState<CreateUserDto>({
+    const [user, setUser] = useState<UpdateUserDto>({
+        id: userId,
         firstName: '',
         lastName: '',
         email: '',
-        role: role,
         phoneNumber: ''
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     useEffect(() => {
+        setUser(prevUser => ({
+            ...prevUser,
+            id: userId
+        }));
+    }, [userId]);
+
+    useEffect(() => {
         setButtonDisabled(
-          !(user.firstName && user.lastName && user.email && user.phoneNumber)
+          !(user.firstName || user.lastName || user.email || user.phoneNumber)
         );
       }, [user]);
 
@@ -52,16 +60,17 @@ export default function CreateUserModal({
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault()
+        event.preventDefault();
+        event.stopPropagation();
         try {
-            const response = await createUser(user);
+            const response = await updateUser(user);
+            console.log(response)
             if(response.success){
-                addNewUser(response.message)
+                updateExistingUser(response.message)
                 onClose();
             }
-            
         } catch (error) {
-            throw('Failed to create owner. Please check your input and try again.');
+            throw('Failed to update user. Please check your input and try again.');
         }
     };
 
@@ -70,10 +79,10 @@ export default function CreateUserModal({
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Dodaj novog vlasnika</ModalHeader>
+                    <ModalHeader>Uredi podatke {role == ROLE.OWNER ? 'vlasnika' : 'veterinara'}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <FormControl isRequired>
+                        <FormControl>
                             <FormLabel>Ime</FormLabel>
                             <Input
                                 placeholder="Ime"
@@ -82,7 +91,7 @@ export default function CreateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Prezime</FormLabel>
                             <Input
                                 placeholder="Prezime"
@@ -91,7 +100,7 @@ export default function CreateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Email</FormLabel>
                             <Input
                                 placeholder="Email"
@@ -101,7 +110,7 @@ export default function CreateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4} isRequired>
+                        <FormControl mt={4}>
                             <FormLabel>Broj mobitela</FormLabel>
                             <Input
                                 placeholder="Broj mobitela"

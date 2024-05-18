@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-export const createUser = async (user: CreateUserDto) => {
+export const createUser = async (user: CreateUserDto, clinicId?: string) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user`, user);
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user${clinicId ? `/${clinicId}` : ''}`, user);
     return response.data;
   } catch (error) {
     console.error("Error during creating owner:", error);
@@ -14,10 +14,9 @@ export const createUser = async (user: CreateUserDto) => {
 export const updateUser = async (user: UpdateUserDto) => {
   try {
     const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/update`, user);
-    console.log(response)
     return response.data;
   } catch (error) {
-    console.error("Error during creating owner:", error);
+    console.error("Error during updating user:", error);
     throw error;
   }
 

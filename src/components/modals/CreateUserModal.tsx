@@ -12,30 +12,31 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { updateUser } from "../api/userService";
-import { ROLE } from "../enums/roles.enum";
+import { ROLE } from "../../enums/roles.enum";
+import { createUser } from "../../api/userService";
+
 
 interface CreateUserModalProps {
     isOpen: boolean;
     onClose: () => void;
-    userId: string;
     role: ROLE;
-    updateExistingUser: (user: User) => void;
+    clinicId?: string;
+    addNewUser: (user: User) => void;
 }
 
-export default function UpdateUserModal({
+export default function CreateUserModal({
     isOpen,
     onClose,
-    userId,    
     role,
-    updateExistingUser
+    clinicId,
+    addNewUser
 }: CreateUserModalProps) {
 
-    const [user, setUser] = useState<UpdateUserDto>({
-        id: userId,
+    const [user, setUser] = useState<CreateUserDto>({
         firstName: '',
         lastName: '',
         email: '',
+        role: role,
         phoneNumber: ''
     });
 
@@ -43,7 +44,7 @@ export default function UpdateUserModal({
 
     useEffect(() => {
         setButtonDisabled(
-          !(user.firstName || user.lastName || user.email || user.phoneNumber)
+          !(user.firstName && user.lastName && user.email && user.phoneNumber)
         );
       }, [user]);
 
@@ -53,29 +54,28 @@ export default function UpdateUserModal({
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
+        event.preventDefault()
         try {
-            const response = await updateUser(user);
-            console.log(response)
+            const response = await createUser(user, clinicId);
             if(response.success){
-                updateExistingUser(response.message)
+                addNewUser(response.message)
                 onClose();
             }
+            
         } catch (error) {
-            throw('Failed to update user. Please check your input and try again.');
+            throw('Failed to create user. Please check your input and try again.');
         }
     };
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside"> 
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Uredi podatke {role == ROLE.OWNER ? 'vlasnika' : 'veterinara'}</ModalHeader>
+                    <ModalHeader>Dodaj novog {role === ROLE.OWNER ? 'vlasnika' : 'veterinara'}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <FormControl>
+                        <FormControl isRequired>
                             <FormLabel>Ime</FormLabel>
                             <Input
                                 placeholder="Ime"
@@ -84,7 +84,7 @@ export default function UpdateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4}>
+                        <FormControl mt={4} isRequired>
                             <FormLabel>Prezime</FormLabel>
                             <Input
                                 placeholder="Prezime"
@@ -93,7 +93,7 @@ export default function UpdateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4}>
+                        <FormControl mt={4} isRequired>
                             <FormLabel>Email</FormLabel>
                             <Input
                                 placeholder="Email"
@@ -103,7 +103,7 @@ export default function UpdateUserModal({
                                 onChange={handleInputChange}
                             />
                         </FormControl>
-                        <FormControl mt={4}>
+                        <FormControl mt={4} isRequired>
                             <FormLabel>Broj mobitela</FormLabel>
                             <Input
                                 placeholder="Broj mobitela"

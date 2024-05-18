@@ -3,13 +3,35 @@ import NavBarGuests from '../components/NavBarGuests'
 import { useState, useEffect } from 'react'
 import { deleteClinic, getClinics } from '../api/clinicsService'
 import { DayOfWeek } from '../enums/dayOfWeek.enum'
-import CreateClinicModal from '../components/CreateClinicModal'
+import CreateClinicModal from '../components/modals/CreateClinicModal'
 import { AddIcon, ArrowForwardIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
+import UpdateClinicInfoModal from '../components/modals/UpdateClinicInfoModal'
+import UpdateWorkingHours from '../components/modals/UpdateWorkingHoursModal'
+import { useNavigate } from 'react-router-dom'
 
 export default function VetClinics() {
 
     const [clinicsData, setClinicsData] = useState<ClinicsDto>([])
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {
+        isOpen: isCreateOpen,
+        onOpen: onCreateOpen,
+        onClose: onCreateClose
+    } = useDisclosure();
+    
+    const {
+        isOpen: isUpdateInfoOpen,
+        onOpen: onUpdateInfoOpen,
+        onClose: onUpdateInfoClose
+    } = useDisclosure();
+
+    const {
+        isOpen: isUpdateHoursOpen,
+        onOpen: onUpdateHoursOpen,
+        onClose: onUpdateHoursClose
+    } = useDisclosure();
+
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadClinics()
@@ -18,7 +40,7 @@ export default function VetClinics() {
     const loadClinics = async () => {
         try {
 
-            const data: ClinicsDto = await getClinics();
+            const data = await getClinics();
             setClinicsData(data);
 
         } catch (error) {
@@ -41,20 +63,29 @@ export default function VetClinics() {
         setClinicsData(prev => [...prev, newClinic]);
     };
 
+    const updateClinic = (updatedClinic: Clinic) => {
+        setClinicsData(prev => prev.map(clinic => clinic.id === updatedClinic.id ? updatedClinic : clinic));
+    };
+
+    const navigateVet = (id: string) => {
+        navigate(`/veterinarians/${id}`, { state: { clinicId: id} });
+      };
+
     return (
         <>
             <NavBarGuests />
             <Flex alignItems={'end'} justifyContent={'space-between'}>
                 <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
-                <Button onClick={onOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
+                <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
                     Dodaj novu veterinarsku stanicu
                 </Button>
+                <CreateClinicModal
+                    isOpen={isCreateOpen}
+                    onClose={onCreateClose}
+                    addNewClinic={addNewClinic}
+                />
             </Flex>
-            <CreateClinicModal
-                isOpen={isOpen}
-                onClose={onClose}
-                addNewClinic={addNewClinic}
-            />
+            
             <Box>
                 {clinicsData.map(clinic => (
                     <Card key={clinic.id} className='m-10' borderWidth='1px' borderRadius='1px' borderColor={'grey'} boxShadow="lg">
@@ -82,11 +113,24 @@ export default function VetClinics() {
                             <Flex alignItems={'center'} width="100%">
                                 <Flex marginLeft={20} flex={1} justifyContent={'center'}>
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-                                        <IconButton colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
+                                        <IconButton onClick={onUpdateInfoOpen} colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
+                                        <UpdateClinicInfoModal
+                                            isOpen={isUpdateInfoOpen}
+                                            onClose={onUpdateInfoClose}
+                                            clinicId={clinic.id}
+                                            updateClinic={updateClinic}
+                                        />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
                                     </Flex>
+                                    
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
-                                        <IconButton colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
+                                        <IconButton  onClick={onUpdateHoursOpen} colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
+                                        <UpdateWorkingHours
+                                            isOpen={isUpdateHoursOpen}
+                                            onClose={onUpdateHoursClose}
+                                            clinicId={clinic.id}
+                                            updateClinic={updateClinic}
+                                        />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
                                     </Flex>
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
@@ -96,11 +140,12 @@ export default function VetClinics() {
                                 </Flex>
                                 <Flex justifyContent={'end'}>
                                 <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-                                    <IconButton aria-label='Veterinari' icon={<ArrowForwardIcon boxSize={6} />} />
+                                    <IconButton onClick={() => navigateVet(clinic.id)} aria-label='Veterinari' icon={<ArrowForwardIcon boxSize={6} />} />
                                     <Text color={'gray'}>Veterinari</Text>
                                 </Flex>
                                 </Flex>
                             </Flex>
+                        
                         </CardFooter>
 
 
