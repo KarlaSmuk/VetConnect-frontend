@@ -21,28 +21,20 @@ import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 interface UpdateWorkingHoursModalProps {
     isOpen: boolean;
     onClose: () => void;
-    clinicId: string;
+    clinicData: Clinic;
     updateClinic: (clinic: Clinic) => void;
 }
 
-export default function UpdateWorkingHours({
+export default function UpdateWorkingHoursModal({
     isOpen,
     onClose,
-    clinicId,
+    clinicData,
     updateClinic
 }: UpdateWorkingHoursModalProps) {
 
     const [clinic, setClinic] = useState<UpdateWorkingHoursDto>({
-        clinicId: clinicId,
-        workingHours: [
-            { day: 1, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 2, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 3, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 4, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 5, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 6, openingTime: '', closingTime: '', specialNotes: '' },
-            { day: 7, openingTime: '', closingTime: '', specialNotes: '' }
-        ]
+        clinicId: clinicData.id,
+        workingHours: clinicData.workingHours
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -59,24 +51,16 @@ export default function UpdateWorkingHours({
         const updatedHours = clinic.workingHours.map((day, i) =>
             i === index ? { ...day, [field]: value } : day
         );
-
-        const updatedClinic = { ...clinic, workingHours: updatedHours };
+         
+        const updatedClinic = { ...clinic, workingHours: updatedHours.sort((a, b) => a.day - b.day) };
         setClinic(updatedClinic);
-
-        // Fill other days
-        if (index === 0 && field !== 'specialNotes') {
-            const propagatedHours = updatedHours.map((day, i) =>
-                i !== 0 && day.day !== 7 ? { ...day, [field]: value } : day
-            );
-            setClinic({ ...clinic, workingHours: propagatedHours });
-        }
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {
             const response = await updateWorkingHours(clinic);
-            if (response.success) {
+            if (response.status) {
                 updateClinic(response.message);
                 onClose();
             }

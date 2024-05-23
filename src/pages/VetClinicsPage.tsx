@@ -6,8 +6,8 @@ import { DayOfWeek } from '../enums/dayOfWeek.enum'
 import CreateClinicModal from '../components/modals/CreateClinicModal'
 import { AddIcon, ArrowForwardIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import UpdateClinicInfoModal from '../components/modals/UpdateClinicInfoModal'
-import UpdateWorkingHours from '../components/modals/UpdateWorkingHoursModal'
 import { useNavigate } from 'react-router-dom'
+import UpdateWorkingHoursModal from '../components/modals/UpdateWorkingHoursModal'
 
 export default function VetClinics() {
 
@@ -101,7 +101,7 @@ export default function VetClinics() {
                                     <Heading size='md' className='mb-3'>Radno vrijeme</Heading>
                                     {clinic.workingHours.map(wh => (
                                         <Text key={wh.id} fontSize='sm'>
-                                            {`${DayOfWeek[wh.dayOfWeek]}: ${wh.openingTime.substring(0, 5)} - ${wh.closingTime.substring(0, 5)}`}
+                                            {`${DayOfWeek[wh.day]}: ${wh.openingTime.substring(0, 5)} - ${wh.closingTime.substring(0, 5)}`}
                                             {wh.specialNotes && ` (${wh.specialNotes})`}
                                         </Text>
                                     ))}
@@ -125,10 +125,10 @@ export default function VetClinics() {
                                     
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
                                         <IconButton  onClick={onUpdateHoursOpen} colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
-                                        <UpdateWorkingHours
+                                        <UpdateWorkingHoursModal
                                             isOpen={isUpdateHoursOpen}
                                             onClose={onUpdateHoursClose}
-                                            clinicId={clinic.id}
+                                            clinicData={clinic}
                                             updateClinic={updateClinic}
                                         />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>

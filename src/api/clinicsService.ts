@@ -53,6 +53,7 @@ export const deleteClinic = async (clinicId: string) => {
 export const updateWorkingHours = async (workingHoursClinic: UpdateWorkingHoursDto) => {
   try {
     const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/hours`, workingHoursClinic);
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error during updating clinic's working hours:", error);

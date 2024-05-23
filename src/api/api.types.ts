@@ -1,6 +1,6 @@
 interface WorkingHours {
     id: string;
-    dayOfWeek: number;
+    day: number;
     openingTime: string;
     closingTime: string;
     specialNotes: string;
