@@ -9,11 +9,13 @@ import {
     ModalFooter,
     FormControl,
     FormLabel,
-    Input
+    Input,
+    useToast
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { updateUser } from "../../api/user.service";
 import { ROLE } from "../../enums/roles.enum";
+import validator from "validator";
 
 interface CreateUserModalProps {
     isOpen: boolean;
@@ -41,6 +43,8 @@ export default function UpdateUserModal({
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
+    const toast = useToast();
+
     useEffect(() => {
         setUser(prevUser => ({
             ...prevUser,
@@ -63,14 +67,27 @@ export default function UpdateUserModal({
         event.preventDefault();
         event.stopPropagation();
         try {
+
+            if(!validator.isEmail(user.email!)){
+                toast({
+                    title: "Pogrešan format Email-a",
+                    status: "error",
+                });
+                return
+            }
+
             const response = await updateUser(user);
-            console.log(response)
+
             if(response.success){
                 updateExistingUser(response.message)
                 onClose();
             }
         } catch (error) {
-            throw('Failed to update user. Please check your input and try again.');
+            console.log('Failed to update user. Please check your input and try again.');
+            toast({
+                title: "Nesupješno uređivanje podataka vlasnika",
+                status: "error",
+            });
         }
     };
 

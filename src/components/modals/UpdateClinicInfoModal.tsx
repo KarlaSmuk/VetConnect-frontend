@@ -9,10 +9,12 @@ import {
     ModalFooter,
     FormControl,
     FormLabel,
-    Input
+    Input,
+    useToast
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { updateClinicInfo } from "../../api/clinic.service";
+import validator from "validator";
 
 interface UpdateClinicInfoModalProps {
     isOpen: boolean;
@@ -39,6 +41,8 @@ export default function UpdateClinicInfoModal({
         webAddress: ''
     });
 
+    const toast = useToast()
+
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     useEffect(() => {
@@ -55,6 +59,15 @@ export default function UpdateClinicInfoModal({
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {
+            
+            if(!validator.isEmail(clinic.email!)){
+                toast({
+                    title: "Pogrešan format Email-a.",
+                    status: "error",
+                });
+                return
+            }
+
             const response = await updateClinicInfo(clinic);
             if (response.success) {
                 updateClinic(response.message);
@@ -63,6 +76,11 @@ export default function UpdateClinicInfoModal({
 
         } catch (error) {
             console.error('Error during updating clinic.');
+            toast({
+                title: "Pogreška kod uređivanja podataka klinike",
+                description: "Dodaj radno vrijeme ako nisi.",
+                status: "error",
+            });
         }
     };
 
@@ -96,6 +114,7 @@ export default function UpdateClinicInfoModal({
                         <Input
                             placeholder="Email"
                             name="email"
+                            type="email"
                             value={clinic.email}
                             onChange={handleInputChange}
                         />

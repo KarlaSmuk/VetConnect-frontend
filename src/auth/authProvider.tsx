@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, PropsWithChildren } from "react";
+import { createContext, useState, useContext, PropsWithChildren, useEffect } from "react";
 import { loginUser, registerUser, verifyOTP } from "../api/auth.service";
 
 
@@ -6,7 +6,7 @@ interface AuthContextType {
   user: UserAuth | null;
   isLoggedIn: boolean;
   currentUser: UserAuth | null;
-  login: (userData: LoginRegisterDto) => Promise<void>; 
+  login: (userData: LoginRegisterDto) => Promise<boolean>; 
   verifyOtp: (userData: VerifyOTPDto) => Promise<boolean>;
   register: (userData: LoginRegisterDto) => Promise<boolean>;
   logout: () => void;
@@ -17,6 +17,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<UserAuth | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const login = async (userData: LoginRegisterDto) => {
     try {
@@ -34,6 +41,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   
       setUser(userRole);
       window.localStorage.setItem("user", JSON.stringify(userRole));
+      return loggedUser.success
       } catch (err) {
         console.error(err);
       }

@@ -1,4 +1,4 @@
-import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure, IconButton } from '@chakra-ui/react'
+import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Input, Box, Button, useDisclosure, IconButton, useToast } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import NavBarGuests from '../../components/NavBar'
 import { getOwners } from '../../api/ownerPets.service'
@@ -33,6 +33,7 @@ export default function Owners() {
         onClose: onUpdateClose
     } = useDisclosure();
     
+    const toast = useToast()
 
     useEffect(() => {
         loadOwners()
@@ -111,9 +112,20 @@ export default function Owners() {
     const handleSendOTP = async (userId: string) => {
         try {
             const response = await sendOTP(userId);
-            console.log(response)
+            if(response.success){
+                toast({
+                    title: "Jednokaratna lozinka uspješno poslana na Email.",
+                    status: "success",
+                });
+            }
         } catch (error) {
             console.error("Error deleting user:", error);
+
+            toast({
+                title: "Pogreška kod slanja jednokratne lozinke",
+                description: "Pokušajte ponovno",
+                status: "error",
+            });
         }
 
     };

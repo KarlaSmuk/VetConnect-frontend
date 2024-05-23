@@ -1,5 +1,5 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, Text, Flex, Heading, Input, HStack, PinInput, PinInputField } from "@chakra-ui/react";
+import { Box, Button, Container, Text, Flex, Heading, Input, HStack, PinInput, PinInputField, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
 import { useState } from "react";
@@ -12,6 +12,7 @@ export default function OtpVerification() {
     });
     const navigate = useNavigate();
     const { verifyOtp } = useAuth()
+    const toast = useToast()
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -34,9 +35,21 @@ export default function OtpVerification() {
             console.log(verified)
             if(verified){
                 navigate('/changePassword', {state: {email: userData.email}})
+                toast({
+                    title: "Verifikacija uspješna",
+                    description: "Unesite novu lozinku.",
+                    status: "success",
+                });
+            }else{
+                toast({
+                    title: "Pogrešan email ili jednokratna lozinka",
+                    description: "Obratite se veterinaru za drugu jednokratnu lozinku ili unesite ispravan email.",
+                    status: "error",
+                });
             }
         } catch (error) {
             console.error("Error during login:", error);
+            
         }
     };
 

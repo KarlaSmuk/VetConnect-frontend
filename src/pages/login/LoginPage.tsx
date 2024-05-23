@@ -1,5 +1,5 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, Text, Flex, Heading, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Box, Button, Container, Text, Flex, Heading, Input, InputGroup, InputRightElement, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
@@ -13,6 +13,7 @@ export default function Login() {
 
     const { login } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast()
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -22,9 +23,20 @@ export default function Login() {
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            login(loginData);
-            navigate("/");
+            const logged = await login(loginData);
+            if(logged){
+                toast({
+                    title: "Uspješna prijava.",
+                    status: "success",
+                });
+                navigate("/");
+            }
         } catch (error) {
+            toast({
+                title: "Prijava neuspješna.",
+                description: "Pogrešan email ili lozinka.",
+                status: "error"
+            });
             console.error("Error during login:", error);
         }
     };

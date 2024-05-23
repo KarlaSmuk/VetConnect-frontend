@@ -9,11 +9,13 @@ import {
     ModalFooter,
     FormControl,
     FormLabel,
-    Input
+    Input,
+    useToast
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { ROLE } from "../../enums/roles.enum";
 import { createUser } from "../../api/user.service";
+import validator from "validator";
 
 
 interface CreateUserModalProps {
@@ -42,6 +44,8 @@ export default function CreateUserModal({
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
+    const toast = useToast()
+
     useEffect(() => {
         setButtonDisabled(
           !(user.firstName && user.lastName && user.email && user.phoneNumber)
@@ -56,6 +60,15 @@ export default function CreateUserModal({
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         try {
+
+            if(!validator.isEmail(user.email)){
+                toast({
+                    title: "Pogrešan format Email-a",
+                    status: "error",
+                });
+                return
+            }
+
             const response = await createUser(user, clinicId);
             if(response.success){
                 addNewUser(response.message)
@@ -63,7 +76,12 @@ export default function CreateUserModal({
             }
             
         } catch (error) {
-            throw('Failed to create user. Please check your input and try again.');
+            console.log('Failed to create user. Please check your input and try again.');
+            
+            toast({
+                title: "Nesupješno dodavanje novog vlasnika",
+                status: "error",
+            });
         }
     };
 

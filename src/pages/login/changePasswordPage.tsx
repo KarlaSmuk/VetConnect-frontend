@@ -1,5 +1,5 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, Flex, Heading, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, Input, InputGroup, InputRightElement, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/authProvider";
@@ -13,6 +13,8 @@ export default function ChangePassword() {
         email: email,
         password: "",
     });
+
+    const toast = useToast()
 
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,6 +36,11 @@ export default function ChangePassword() {
                 console.log(registerData)
                 const updatedPass = await register(registerData)
                 if(updatedPass){
+                    toast({
+                        title: "Lozinka ažurirana",
+                        description: "Prijavite se.",
+                        status: "success",
+                      });
                     navigate('/login')
                 }
             }

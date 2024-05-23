@@ -12,11 +12,13 @@ import {
     Input,
     FormHelperText,
     Text,
-    Box
+    Box,
+    useToast
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { createClinic } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
+import validator from "validator";
 
 interface CreateClinicModalProps {
     isOpen: boolean;
@@ -51,6 +53,8 @@ export default function CreateClinicModal({
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
+    const toast = useToast()
+
     useEffect(() => {
         setButtonDisabled(
             !(clinic.oib && clinic.name && clinic.email && clinic.phoneNumber && clinic.address && clinic.workingHours && clinic.county)
@@ -82,6 +86,15 @@ export default function CreateClinicModal({
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         try {
+
+            if(!validator.isEmail(clinic.email)){
+                toast({
+                    title: "Pogrešan format Email-a.",
+                    status: "error",
+                });
+                return
+            }
+
             const response = await createClinic(clinic);
             if (response.success) {
                 addNewClinic(response.message);
@@ -90,6 +103,10 @@ export default function CreateClinicModal({
 
         } catch (error) {
             console.error('Error during creating clinic.');
+            toast({
+                title: "Pogreška kod dodavanja nove klinike.",
+                status: "error",
+            });
         }
     };
 
