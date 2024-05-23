@@ -1,13 +1,15 @@
 import { Card, Heading, CardBody, Box, Text, Flex, useDisclosure, Button, CardFooter, IconButton, Divider } from '@chakra-ui/react'
-import NavBarGuests from '../components/NavBarGuests'
+import NavBarGuests from '../components/NavBar'
 import { useState, useEffect } from 'react'
-import { deleteClinic, getClinics } from '../api/clinicsService'
+import { deleteClinic, getClinics } from '../api/clinic.service'
 import { DayOfWeek } from '../enums/dayOfWeek.enum'
 import CreateClinicModal from '../components/modals/CreateClinicModal'
 import { AddIcon, ArrowForwardIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import UpdateClinicInfoModal from '../components/modals/UpdateClinicInfoModal'
 import { useNavigate } from 'react-router-dom'
 import UpdateWorkingHoursModal from '../components/modals/UpdateWorkingHoursModal'
+import { useAuth } from '../auth/authProvider'
+import { ROLE } from '../enums/roles.enum'
 
 export default function VetClinics() {
 
@@ -32,6 +34,8 @@ export default function VetClinics() {
 
 
     const navigate = useNavigate();
+
+    const { currentUser } = useAuth()
 
     useEffect(() => {
         loadClinics()
@@ -74,17 +78,23 @@ export default function VetClinics() {
     return (
         <>
             <NavBarGuests />
-            <Flex alignItems={'end'} justifyContent={'space-between'}>
-                <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
-                <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
-                    Dodaj novu veterinarsku stanicu
-                </Button>
-                <CreateClinicModal
-                    isOpen={isCreateOpen}
-                    onClose={onCreateClose}
-                    addNewClinic={addNewClinic}
-                />
-            </Flex>
+            
+                <Flex alignItems={'end'} justifyContent={'space-between'}>
+                    <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
+                    {currentUser?.user.role == ROLE.ADMIN && (
+                        <div>
+                            <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
+                                Dodaj novu veterinarsku stanicu
+                            </Button>
+                            <CreateClinicModal
+                                isOpen={isCreateOpen}
+                                onClose={onCreateClose}
+                                addNewClinic={addNewClinic}
+                            />
+                        </div>
+                    )}
+                </Flex>
+            
             
             <Box>
                 {clinicsData.map(clinic => (
@@ -109,6 +119,7 @@ export default function VetClinics() {
                             </Flex>
                         </CardBody>
                         <Divider />
+                        {(currentUser?.user.role == ROLE.ADMIN || currentUser?.vet)  && (
                         <CardFooter>
                             <Flex alignItems={'center'} width="100%">
                                 <Flex marginLeft={20} flex={1} justifyContent={'center'}>
@@ -133,10 +144,12 @@ export default function VetClinics() {
                                         />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
                                     </Flex>
+                                    {currentUser?.user.role == ROLE.ADMIN && (
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
                                         <IconButton colorScheme='red' aria-label='Izbriši kliniku' icon={<DeleteIcon />} onClick={() => handleDelete(clinic.id)} />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
                                     </Flex>
+                                    )}
                                 </Flex>
                                 <Flex justifyContent={'end'}>
                                 <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
@@ -147,6 +160,7 @@ export default function VetClinics() {
                             </Flex>
                         
                         </CardFooter>
+                        )}
 
 
                     </Card>

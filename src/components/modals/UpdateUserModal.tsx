@@ -12,7 +12,7 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { updateUser } from "../../api/userService";
+import { updateUser } from "../../api/user.service";
 import { ROLE } from "../../enums/roles.enum";
 
 interface CreateUserModalProps {

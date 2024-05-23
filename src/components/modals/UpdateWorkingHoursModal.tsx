@@ -15,7 +15,7 @@ import {
     Box
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { updateWorkingHours } from "../../api/clinicsService";
+import { updateWorkingHours } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 
 interface UpdateWorkingHoursModalProps {

@@ -12,7 +12,7 @@ import {
     Input
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { updateClinicInfo } from "../../api/clinicsService";
+import { updateClinicInfo } from "../../api/clinic.service";
 
 interface UpdateClinicInfoModalProps {
     isOpen: boolean;

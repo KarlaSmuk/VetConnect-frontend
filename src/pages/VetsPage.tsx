@@ -2,13 +2,13 @@ import { Avatar, Heading, Select, Flex, Text, Table, TableContainer, Tbody, Td, 
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon, EditIcon, EmailIcon } from '@chakra-ui/icons'
-import { deleteUser, sendOTP } from '../api/userService'
+import { deleteUser, sendOTP } from '../api/user.service'
 import CreateUserModal from '../components/modals/CreateUserModal'
 import UpdateUserModal from '../components/modals/UpdateUserModal'
-import NavBarGuests from '../components/NavBarGuests'
+import NavBarGuests from '../components/NavBar'
 import { ROLE } from '../enums/roles.enum'
-import { getVetsByClinicId } from '../api/veterinarianService'
-import { getClinicById } from '../api/clinicsService'
+import { getVetsByClinicId } from '../api/veterinarian.service'
+import { getClinicById } from '../api/clinic.service'
 
 export default function Vets() {
 

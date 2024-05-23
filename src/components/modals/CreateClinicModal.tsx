@@ -15,7 +15,7 @@ import {
     Box
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
-import { createClinic } from "../../api/clinicsService";
+import { createClinic } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 
 interface CreateClinicModalProps {
