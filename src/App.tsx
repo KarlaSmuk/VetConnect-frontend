@@ -9,7 +9,7 @@ import Vets from "./pages/VetsPage";
 import PrivateRoute from "./auth/privateRoute";
 import Profile from "./pages/ProfilePage";
 import { ROLE } from '../src/enums/roles.enum';
-import Pets from "./pages/owner/PetsPage";
+import Pets from "./pages/PetsPage";
 import Supplies from "./pages/veterinarian/SuppliesPage";
 import Treatments from "./pages/veterinarian/TreatmentsPage";
 

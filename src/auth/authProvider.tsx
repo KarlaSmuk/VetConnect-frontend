@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, PropsWithChildren, useEffect } from "react";
 import { loginUser, registerUser, verifyOTP } from "../api/auth.service";
 import { UserAuth, LoginRegisterDto, VerifyOTPDto } from "../api/types/auth.types";
+import { getUser } from "../api/user.service";
 
 
 interface AuthContextType {
@@ -10,6 +11,7 @@ interface AuthContextType {
   verifyOtp: (userData: VerifyOTPDto) => Promise<boolean>;
   register: (userData: LoginRegisterDto) => Promise<boolean>;
   logout: () => void;
+  refreshUser: (userId: string) => Promise<void>; 
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,20 +29,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const login = async (userData: LoginRegisterDto) => {
     try {
+      
       const loggedUser = await loginUser(userData);
-      const userLoggedData = loggedUser.message.user;
-      let userRole: UserAuth = { user: userLoggedData };
   
-      if (loggedUser.message.owner) {
-        userRole.owner = loggedUser.message.owner;
-      }
-  
-      if (loggedUser.message.vet) {
-        userRole.vet = loggedUser.message.vet;
-      }
-  
-      setUser(userRole);
-      localStorage.setItem("user", JSON.stringify(userRole));
+      setUser(loggedUser.message);
+      localStorage.setItem("user", JSON.stringify(loggedUser.message));
+
       return loggedUser.success
       } catch (err) {
         console.error(err);
@@ -61,7 +55,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const verifyOtp = async (userData: VerifyOTPDto) => {
     try {
-      console.log(userData)
       const verifyUser = await verifyOTP(userData);
 
       return verifyUser.success
@@ -71,9 +64,22 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   const logout = () => {
-    window.localStorage.removeItem("user")
+    localStorage.removeItem("user")
     setUser(null);
   };
+
+  const refreshUser = async (userId: string) => {
+    try {
+      const updatedUser = await getUser(userId)
+
+      setUser(updatedUser.message);
+      localStorage.setItem("user", JSON.stringify(updatedUser.message));
+
+    } catch (e) {
+      console.error("Error parsing user from localStorage", e);
+
+    }
+  }
 
   function getCurrentUser(): UserAuth | null {
     try {
@@ -93,7 +99,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         verifyOtp,
         register,
         login,
-        logout
+        logout,
+        refreshUser
       }}
     >
       {children}

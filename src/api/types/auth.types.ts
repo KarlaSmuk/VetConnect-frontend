@@ -17,7 +17,7 @@ export type UserAuth = {
     vet?: VetAuth;
 }
 
-interface UserData {
+export interface UserData {
     id: string;
     firstName: string;
     lastName: string;

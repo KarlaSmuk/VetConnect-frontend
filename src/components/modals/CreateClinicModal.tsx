@@ -183,6 +183,7 @@ export default function CreateClinicModal({
                             name="county"
                             value={clinic.county}
                             onChange={handleInputChange}
+                            {...(clinic.county === "" && {color: "gray"})}
                         >
                            {counties?.map((county, index) => (
                          

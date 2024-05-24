@@ -19,7 +19,7 @@ export default function VetClinics() {
         onOpen: onCreateOpen,
         onClose: onCreateClose
     } = useDisclosure();
-    
+
     const {
         isOpen: isUpdateInfoOpen,
         onOpen: onUpdateInfoOpen,
@@ -33,6 +33,7 @@ export default function VetClinics() {
     } = useDisclosure();
 
     const [selectedClinicId, setSelectedClinicId] = useState<string>('')
+    const [selectedClinic, setSelectedClinic] = useState<Clinic>()
     const navigate = useNavigate();
 
     const { currentUser } = useAuth()
@@ -60,7 +61,7 @@ export default function VetClinics() {
         } catch (error) {
             console.error("Error deleting user:", error);
         }
-        
+
     };
 
     const addNewClinic = (newClinic: Clinic) => {
@@ -72,30 +73,43 @@ export default function VetClinics() {
     };
 
     const navigateVet = (id: string) => {
-        navigate(`/veterinarians/${id}`, { state: { clinicId: id} });
-      };
+        navigate(`/veterinarians/${id}`, { state: { clinicId: id } });
+    };
 
     return (
         <>
             <NavBarGuests />
-            
-                <Flex alignItems={'end'} justifyContent={'space-between'}>
-                    <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
-                    {currentUser?.user.role == ROLE.ADMIN && (
-                        <div>
-                            <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
-                                Dodaj novu veterinarsku stanicu
-                            </Button>
-                            <CreateClinicModal
-                                isOpen={isCreateOpen}
-                                onClose={onCreateClose}
-                                addNewClinic={addNewClinic}
-                            />
-                        </div>
-                    )}
-                </Flex>
-            
-            
+
+            <CreateClinicModal
+                isOpen={isCreateOpen}
+                onClose={onCreateClose}
+                addNewClinic={addNewClinic}
+            />
+            <UpdateClinicInfoModal
+                isOpen={isUpdateInfoOpen}
+                onClose={onUpdateInfoClose}
+                clinicId={selectedClinicId}
+                updateClinic={updateClinic}
+            />
+            <UpdateWorkingHoursModal
+                isOpen={isUpdateHoursOpen}
+                onClose={onUpdateHoursClose}
+                clinicData={selectedClinic}
+                updateClinic={updateClinic}
+            />
+
+            <Flex alignItems={'end'} justifyContent={'space-between'}>
+                <Heading size='md' className='my-10 ml-5'>Popis veterinarskih stanica</Heading>
+                {currentUser?.user.role == ROLE.ADMIN && (
+                    <div>
+                        <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'300px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
+                            Dodaj novu veterinarsku stanicu
+                        </Button>
+                    </div>
+                )}
+            </Flex>
+
+
             <Box>
                 {clinicsData.map(clinic => (
                     <Card key={clinic.id} className='m-10' borderWidth='1px' borderRadius='1px' borderColor={'grey'} boxShadow="lg">
@@ -120,50 +134,43 @@ export default function VetClinics() {
                             </Flex>
                         </CardBody>
                         <Divider />
-                        {currentUser?.user.role == ROLE.ADMIN  && (
-                        <CardFooter>
-                            <Flex alignItems={'center'} width="100%">
-                                <Flex marginLeft={20} flex={1} justifyContent={'center'}>
-                                    <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-                                        <IconButton onClick={() => {
-                                            console.log('clinic.id:', clinic.id); // Debugging log
-                                            setSelectedClinicId(clinic.id);
-                                            console.log('selectedClinicId after set:', selectedClinicId);
-                                            onUpdateInfoOpen()
-                                        } } colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
-                                        <UpdateClinicInfoModal
-                                            isOpen={isUpdateInfoOpen}
-                                            onClose={onUpdateInfoClose}
-                                            clinicId={selectedClinicId}
-                                            updateClinic={updateClinic}
-                                        />
-                                        <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
+                        {currentUser?.user.role == ROLE.ADMIN && (
+                            <CardFooter>
+                                <Flex alignItems={'center'} width="100%">
+                                    <Flex marginLeft={20} flex={1} justifyContent={'center'}>
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+                                            <IconButton onClick={() => {
+                                                console.log('clinic.id:', clinic.id); // Debugging log
+                                                setSelectedClinicId(clinic.id);
+                                                console.log('selectedClinicId after set:', selectedClinicId);
+                                                onUpdateInfoOpen()
+                                            }} colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
+
+                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
+                                        </Flex>
+
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
+                                            <IconButton onClick={() => {
+                                                setSelectedClinic(clinic!)
+                                                onUpdateHoursOpen()
+                                            }} colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
+
+                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
+                                        </Flex>
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
+                                            <IconButton colorScheme='red' aria-label='Izbriši kliniku' icon={<DeleteIcon />} onClick={() => handleDelete(clinic.id)} />
+                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
+                                        </Flex>
                                     </Flex>
-                                    
-                                    <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
-                                        <IconButton  onClick={onUpdateHoursOpen} colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
-                                        <UpdateWorkingHoursModal
-                                            isOpen={isUpdateHoursOpen}
-                                            onClose={onUpdateHoursClose}
-                                            clinicData={clinic}
-                                            updateClinic={updateClinic}
-                                        />
-                                        <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
-                                    </Flex>
-                                    <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
-                                        <IconButton colorScheme='red' aria-label='Izbriši kliniku' icon={<DeleteIcon />} onClick={() => handleDelete(clinic.id)} />
-                                        <Text marginTop={2} fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
+                                    <Flex justifyContent={'end'}>
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+                                            <IconButton onClick={() => navigateVet(clinic.id)} aria-label='Veterinari' icon={<ArrowForwardIcon boxSize={6} />} />
+                                            <Text color={'gray'}>Veterinari</Text>
+                                        </Flex>
                                     </Flex>
                                 </Flex>
-                                <Flex justifyContent={'end'}>
-                                <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-                                    <IconButton onClick={() => navigateVet(clinic.id)} aria-label='Veterinari' icon={<ArrowForwardIcon boxSize={6} />} />
-                                    <Text color={'gray'}>Veterinari</Text>
-                                </Flex>
-                                </Flex>
-                            </Flex>
-                        
-                        </CardFooter>
+
+                            </CardFooter>
                         )}
 
 

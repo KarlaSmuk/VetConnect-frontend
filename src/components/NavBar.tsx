@@ -2,7 +2,7 @@ import { Avatar, Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 
-export default function NavBarGuests() {
+export default function NavBarComponent() {
 
     const {logout, currentUser} = useAuth()
 
@@ -17,10 +17,10 @@ export default function NavBarGuests() {
             <nav className='m-5 my-8 flex items-center '>
                 { currentUser && (
                     <Avatar
-                        src={`https://lh3.googleusercontent.com/d/${currentUser?.user.photo!}`}
+                        src={`https://lh3.googleusercontent.com/d/${currentUser.user.photo!}`}
                         name={`${currentUser.user.firstName!} ${currentUser.user.lastName}`}
                         className="cursor-pointer mr-4"
-                        onClick={() => navigate('/profile', {state: {userId: currentUser.user.id}})}
+                        onClick={() => navigate('/profile')} //, {state: {user: currentUser.user}})
                     />
                 )}
                 { currentUser && (

@@ -22,6 +22,17 @@ export const updateUser = async (user: UpdateUserDto) => {
 
 };
 
+export const getUser = async (userId: string) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/` + userId);
+    return response.data;
+  } catch (error) {
+    console.error("Error during creating owner:", error);
+    throw error;
+  }
+
+};
+
 export const deleteUser = async (userId: string) => {
   try {
     const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/delete/` + userId);
@@ -39,6 +50,17 @@ export const sendOTP = async (userId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error during creating owner:", error);
+    throw error;
+  }
+
+};
+
+export const uploadImage = async (userId: string, file: FormData) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/saveProfileImage/` + userId, file);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading photo:", error);
     throw error;
   }
 

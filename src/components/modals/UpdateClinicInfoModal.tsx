@@ -41,9 +41,11 @@ export default function UpdateClinicInfoModal({
         phoneNumber: '',
         webAddress: ''
     });
+    
     useEffect(() => {
         clinic.id = clinicId
     }, [clinicId]);
+
     const toast = useToast()
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -164,6 +166,7 @@ export default function UpdateClinicInfoModal({
                             name="county"
                             value={clinic.county}
                             onChange={handleInputChange}
+                            {...(clinic.county === "" && {color: "gray"})}
                         >
                            {counties?.map((county, index) => (
                          

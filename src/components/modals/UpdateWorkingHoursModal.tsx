@@ -21,7 +21,7 @@ import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 interface UpdateWorkingHoursModalProps {
     isOpen: boolean;
     onClose: () => void;
-    clinicData: Clinic;
+    clinicData: Clinic | undefined;
     updateClinic: (clinic: Clinic) => void;
 }
 
@@ -33,11 +33,19 @@ export default function UpdateWorkingHoursModal({
 }: UpdateWorkingHoursModalProps) {
 
     const [clinic, setClinic] = useState<UpdateWorkingHoursDto>({
-        clinicId: clinicData.id,
-        workingHours: clinicData.workingHours
+        clinicId: '',
+        workingHours: []
     });
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        setClinic(prevClinic => ({
+            ...prevClinic,
+            clinicId: clinicData?.id ?? prevClinic.clinicId,
+            workingHours: clinicData?.workingHours ?? prevClinic.workingHours
+        }));
+    }, [clinicData]);
 
     useEffect(() => {
         setButtonDisabled(
@@ -60,7 +68,7 @@ export default function UpdateWorkingHoursModal({
         event.preventDefault();
         try {
             const response = await updateWorkingHours(clinic);
-            if (response.status) {
+            if (response.success) {
                 updateClinic(response.message);
                 onClose();
             }
