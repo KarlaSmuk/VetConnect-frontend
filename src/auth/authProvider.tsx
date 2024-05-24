@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, PropsWithChildren, useEffect } from "react";
 import { loginUser, registerUser, verifyOTP } from "../api/auth.service";
+import { UserAuth, LoginRegisterDto, VerifyOTPDto } from "../api/types/auth.types";
 
 
 interface AuthContextType {
@@ -75,12 +76,22 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setUser(null);
   };
 
+  function getCurrentUser(): UserAuth | null {
+    try {
+      const userString = localStorage.getItem("user");
+      return JSON.parse(userString!);
+    } catch (e) {
+      console.error("Error parsing user from localStorage", e);
+      return null;
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoggedIn: !!user,
-        currentUser: user,
+        currentUser: getCurrentUser(),
         verifyOtp,
         register,
         login,

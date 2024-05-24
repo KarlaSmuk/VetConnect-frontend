@@ -1,15 +1,17 @@
-type LoginRegisterDto = {
+import { ROLE } from "../../enums/roles.enum";
+
+export type LoginRegisterDto = {
     email: string;
     password: string;
 }
 
-type VerifyOTPDto = {
+export type VerifyOTPDto = {
     email: string;
     otp: string;
 }
 
 
-type UserAuth = {
+export type UserAuth = {
     user: UserData;
     owner?: OwnerAuth;
     vet?: VetAuth;
@@ -21,7 +23,7 @@ interface UserData {
     lastName: string;
     phoneNumber: string;
     email: string;
-    role: string;
+    role: ROLE;
     photo: string | null;
 }
 

@@ -45,7 +45,7 @@ export default function Login() {
 
     return (
         <>
-            <ArrowBackIcon onClick={() => navigate(-1)} boxSize={10} margin={10} className="cursor-pointer" />
+            <ArrowBackIcon onClick={() => navigate('/')} boxSize={10} margin={10} className="cursor-pointer" />
             <Container mt={20}>
                 <Flex direction={"column"} alignItems={"center"}>
                     <Box p="5">
@@ -54,7 +54,6 @@ export default function Login() {
                     <Container>
                         <form onSubmit={handleLogin}>
                             <Input
-                                pr="4.5rem"
                                 type="email"
                                 name="email"
                                 placeholder="Email"
@@ -64,7 +63,6 @@ export default function Login() {
                             />
                             <InputGroup size="md" flexDirection="column">
                                 <Input
-                                    pr="4.5rem"
                                     name="password"
                                     type={show ? "text" : "password"}
                                     placeholder="Lozinka"
@@ -76,9 +74,11 @@ export default function Login() {
                                     </Button>
                                 </InputRightElement>
                             </InputGroup>
-                            <Button type="submit" colorScheme="cyan" width="150px" borderRadius={10} mt={10} textColor={"white"} size="md">
-                                Prijavi se
-                            </Button>
+                            <Flex justifyContent={"center"}>
+                                <Button type="submit" colorScheme="cyan" width="150px" borderRadius={10} mt={10} textColor={"white"} size="md">
+                                    Prijavi se
+                                </Button>
+                            </Flex>
                         </form>
                     </Container>
                 </Flex>

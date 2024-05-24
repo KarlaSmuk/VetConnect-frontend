@@ -88,9 +88,11 @@ export default function ChangePassword() {
                                 </Button>
                             </InputRightElement>
                         </InputGroup>
-                        <Button type="submit" colorScheme='cyan' width="150px" borderRadius={10} mt={10} textColor={'white'} size='md'>
-                            Potvrdi
-                        </Button>
+                        <Flex justifyContent={"center"}>
+                            <Button type="submit" colorScheme='cyan' width="150px" borderRadius={10} mt={10} textColor={'white'} size='md'>
+                                Potvrdi
+                            </Button>
+                        </Flex>
                     </form>
                     {/* on click if password change is succesfull go to login page */}
                 </Flex>

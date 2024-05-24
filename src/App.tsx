@@ -7,7 +7,8 @@ import ChangePassword from "./pages/login/ChangePasswordPage";
 import Owners from "./pages/veterinarian/OwnersPage";
 import Vets from "./pages/VetsPage";
 import PrivateRoute from "./auth/privateRoute";
-import { ROLE } from "./enums/roles.enum";
+import Profile from "./pages/ProfilePage";
+import { ROLE } from '../src/enums/roles.enum';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path='/changePassword' element={<ChangePassword />} />
         <Route path='/owners' element={<PrivateRoute component={Owners} roles={ROLE.VET} />} />
         <Route path='/veterinarians/:id' element={<Vets />} />
+        <Route path='/profile' element={<PrivateRoute component={Profile} roles={[ROLE.VET, ROLE.ADMIN, ROLE.OWNER]} />} />
       </Routes>
   )
 }

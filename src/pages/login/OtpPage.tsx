@@ -80,9 +80,11 @@ export default function OtpVerification() {
                                 <PinInputField />
                             </PinInput>
                         </HStack>
-                        <Button type="submit" colorScheme='cyan' width="150px" borderRadius={10} mt={10} textColor={'white'} size='md'>
-                        Potvrdi
-                        </Button>
+                        <Flex justifyContent={"center"}>
+                            <Button type="submit" colorScheme='cyan' width="150px" borderRadius={10} mt={10} textColor={'white'} size='md'>
+                            Potvrdi
+                            </Button>
+                        </Flex>
                     </form>
                     
                     {/* on click if otp verification is succesfull go to change password page */}
