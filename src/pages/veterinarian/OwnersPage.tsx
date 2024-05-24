@@ -84,7 +84,7 @@ export default function Owners() {
     };
 
     const handleRowClick = (id: string) => {
-        navigate(`/owner/pets/${id}`)
+        navigate(`/owner/${id}`)
     }
 
     const handleDelete = (id: string) => async (e: any) => {

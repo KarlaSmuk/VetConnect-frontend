@@ -11,7 +11,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, roles }) => {
   const { currentUser } = useAuth();
-  console.log(currentUser?.user.role)
   //add here the page that says that user dont have an access to view that page
   return ( (currentUser && roles.includes(currentUser.user.role)) ? <Component /> : <Navigate to="/login" /> );
 };

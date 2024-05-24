@@ -28,14 +28,10 @@ interface UserData {
 }
 
 interface VetAuth {
-    vet: {
-        id: string;
-        clinicId: string;
-    }
+    id: string;
+    clinicId: string;
 }
 
 interface OwnerAuth {
-    owner: {
-        id: string;
-    }
+    id: string; 
 }

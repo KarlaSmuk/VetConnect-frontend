@@ -32,7 +32,7 @@ export default function VetClinics() {
         onClose: onUpdateHoursClose
     } = useDisclosure();
 
-
+    const [selectedClinicId, setSelectedClinicId] = useState<string>('')
     const navigate = useNavigate();
 
     const { currentUser } = useAuth()
@@ -103,7 +103,8 @@ export default function VetClinics() {
                             <Flex direction="row" justify="space-around" align="center">
                                 <Box>
                                     <Heading size='lg'>{clinic.name}</Heading>
-                                    <Text fontSize='md'>{clinic.address}</Text>
+                                    <Text fontSize='md'>{clinic.county}</Text>
+                                    <Text fontSize='sm'>{clinic.address}</Text>
                                     <Text fontSize='sm'>{clinic.phoneNumber} | {clinic.email}</Text>
                                     <Text fontSize='sm'>{clinic.webAddress}</Text>
                                 </Box>
@@ -119,16 +120,21 @@ export default function VetClinics() {
                             </Flex>
                         </CardBody>
                         <Divider />
-                        {(currentUser?.user.role == ROLE.ADMIN || currentUser?.vet)  && (
+                        {currentUser?.user.role == ROLE.ADMIN  && (
                         <CardFooter>
                             <Flex alignItems={'center'} width="100%">
                                 <Flex marginLeft={20} flex={1} justifyContent={'center'}>
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-                                        <IconButton onClick={onUpdateInfoOpen} colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
+                                        <IconButton onClick={() => {
+                                            console.log('clinic.id:', clinic.id); // Debugging log
+                                            setSelectedClinicId(clinic.id);
+                                            console.log('selectedClinicId after set:', selectedClinicId);
+                                            onUpdateInfoOpen()
+                                        } } colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
                                         <UpdateClinicInfoModal
                                             isOpen={isUpdateInfoOpen}
                                             onClose={onUpdateInfoClose}
-                                            clinicId={clinic.id}
+                                            clinicId={selectedClinicId}
                                             updateClinic={updateClinic}
                                         />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
@@ -144,12 +150,10 @@ export default function VetClinics() {
                                         />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
                                     </Flex>
-                                    {currentUser?.user.role == ROLE.ADMIN && (
                                     <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
                                         <IconButton colorScheme='red' aria-label='Izbriši kliniku' icon={<DeleteIcon />} onClick={() => handleDelete(clinic.id)} />
                                         <Text marginTop={2} fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
                                     </Flex>
-                                    )}
                                 </Flex>
                                 <Flex justifyContent={'end'}>
                                 <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>

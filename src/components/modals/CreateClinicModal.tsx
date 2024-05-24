@@ -13,13 +13,13 @@ import {
     FormHelperText,
     Text,
     Box,
-    useToast
+    useToast,
+    Select
 } from "@chakra-ui/react";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState, ChangeEvent } from "react";
 import { createClinic } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 import validator from "validator";
-
 interface CreateClinicModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -50,10 +50,23 @@ export default function CreateClinicModal({
             { day: 7, openingTime: '', closingTime: '', specialNotes: '' }
         ]
     });
+    const [counties, setCounties] = useState<string[] | null>(null);
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     const toast = useToast()
+
+    useEffect(() => {
+        fetch('/counties.json')
+        .then((response) => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => setCounties(data.counties))
+        .catch((error) => console.error('Error fetching JSON:', error));
+    }, []);
 
     useEffect(() => {
         setButtonDisabled(
@@ -61,11 +74,12 @@ export default function CreateClinicModal({
         );
     }, [clinic]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setClinic(prev => ({ ...prev, [name]: value }));
+        console.log(clinic)
     };
-
+    
     const handleTimeChange = (index: number, field: string, value: string) => {
         const updatedHours = clinic.workingHours.map((day, i) =>
             i === index ? { ...day, [field]: value } : day
@@ -164,12 +178,18 @@ export default function CreateClinicModal({
                     </FormControl>
                     <FormControl mt={4} isRequired>
                         <FormLabel>Županija</FormLabel>
-                        <Input
-                            placeholder="Županija"
+                        <Select 
+                            placeholder='Županija'
                             name="county"
                             value={clinic.county}
                             onChange={handleInputChange}
-                        />
+                        >
+                           {counties?.map((county, index) => (
+                         
+                                <option key={index} value={county}>{county}</option>
+                         
+                            ))}
+                        </Select>
                     </FormControl>
                     <FormControl mt={4} isRequired>
                         <FormLabel>Broj mobitela</FormLabel>

@@ -10,7 +10,8 @@ import {
     FormControl,
     FormLabel,
     Input,
-    useToast
+    useToast,
+    Select
 } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { updateClinicInfo } from "../../api/clinic.service";
@@ -31,7 +32,7 @@ export default function UpdateClinicInfoModal({
 }: UpdateClinicInfoModalProps) {
 
     const [clinic, setClinic] = useState<UpdateClinicInfoDto>({
-        id: clinicId,
+        id: '',
         oib: '',
         name: '',
         email: '',
@@ -40,10 +41,28 @@ export default function UpdateClinicInfoModal({
         phoneNumber: '',
         webAddress: ''
     });
-
+    useEffect(() => {
+        clinic.id = clinicId
+    }, [clinicId]);
     const toast = useToast()
 
     const [buttonDisabled, setButtonDisabled] = useState(true);
+
+    const [counties, setCounties] = useState<string[] | null>(null);
+
+
+    useEffect(() => {
+        fetch('/counties.json')
+        .then((response) => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => setCounties(data.counties))
+        .catch((error) => console.error('Error fetching JSON:', error));
+    }, []);
+
 
     useEffect(() => {
         setButtonDisabled(
@@ -51,16 +70,17 @@ export default function UpdateClinicInfoModal({
         );
     }, [clinic]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setClinic(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        console.log(clinic)
         try {
             
-            if(!validator.isEmail(clinic.email!)){
+            if(clinic.email && !validator.isEmail(clinic.email!)){
                 toast({
                     title: "Pogrešan format Email-a.",
                     status: "error",
@@ -138,13 +158,19 @@ export default function UpdateClinicInfoModal({
                         />
                     </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Županija</FormLabel>
-                        <Input
-                            placeholder="Županija"
+                    <FormLabel>Županija</FormLabel>
+                        <Select 
+                            placeholder='Županija'
                             name="county"
                             value={clinic.county}
                             onChange={handleInputChange}
-                        />
+                        >
+                           {counties?.map((county, index) => (
+                         
+                                <option key={index} value={county}>{county}</option>
+                         
+                            ))}
+                        </Select>
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Broj mobitela</FormLabel>

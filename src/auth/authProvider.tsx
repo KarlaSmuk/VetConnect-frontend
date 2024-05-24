@@ -5,7 +5,6 @@ import { UserAuth, LoginRegisterDto, VerifyOTPDto } from "../api/types/auth.type
 
 interface AuthContextType {
   user: UserAuth | null;
-  isLoggedIn: boolean;
   currentUser: UserAuth | null;
   login: (userData: LoginRegisterDto) => Promise<boolean>; 
   verifyOtp: (userData: VerifyOTPDto) => Promise<boolean>;
@@ -41,7 +40,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
   
       setUser(userRole);
-      window.localStorage.setItem("user", JSON.stringify(userRole));
+      localStorage.setItem("user", JSON.stringify(userRole));
       return loggedUser.success
       } catch (err) {
         console.error(err);
@@ -90,7 +89,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     <AuthContext.Provider
       value={{
         user,
-        isLoggedIn: !!user,
         currentUser: getCurrentUser(),
         verifyOtp,
         register,
