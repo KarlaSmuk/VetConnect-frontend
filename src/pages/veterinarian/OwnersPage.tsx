@@ -8,6 +8,7 @@ import { deleteUser, sendOTP } from '../../api/user.service'
 import { ROLE } from '../../enums/roles.enum'
 import CreateUserModal from '../../components/modals/CreateUserModal'
 import UpdateUserModal from '../../components/modals/UpdateUserModal'
+import { User, UsersDto } from '../../api/types/api.types'
 
 export default function Owners() {
 

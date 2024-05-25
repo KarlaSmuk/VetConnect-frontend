@@ -2,7 +2,7 @@ import { Avatar, Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 
-export default function NavBarComponent() {
+export default function NavBar() {
 
     const {logout, currentUser} = useAuth()
 

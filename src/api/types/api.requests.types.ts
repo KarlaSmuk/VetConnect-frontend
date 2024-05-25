@@ -54,3 +54,13 @@ type UpdateWorkingHoursDto = {
     clinicId: string;
     workingHours: CreateWorkingHours[];
 }
+
+type CreatePetDto = {
+    name: string;
+    dateOfBirth: Date;
+    neutered: boolean;
+    gender: string;
+    color: string;
+    breedName: string;
+    speciesName: string;
+}

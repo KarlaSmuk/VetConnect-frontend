@@ -1,4 +1,6 @@
-interface WorkingHours {
+import { PetStatus } from "../../enums/petStatus.enum";
+
+export interface WorkingHours {
     id: string;
     day: number;
     openingTime: string;
@@ -6,7 +8,7 @@ interface WorkingHours {
     specialNotes: string;
 }
 
-interface Clinic {
+export interface Clinic {
     oib: string;
     name: string;
     address: string;
@@ -20,9 +22,9 @@ interface Clinic {
     workingHours: WorkingHours[];
 }
 
-type ClinicsDto = Clinic[];
+export type ClinicsDto = Clinic[];
 
-interface User {
+export interface User {
     id: string;
     user: any;
     firstName: string;
@@ -31,4 +33,30 @@ interface User {
     photo: string;
 }
 
-type UsersDto = User[];
+export type UsersDto = User[];
+
+export interface Pet {
+    id: string;
+    name: string;
+    gender: string;
+    color: string;
+    dateOfBirth: string;
+    neutered: boolean;
+    photo: string;
+    status: PetStatus;
+    species: {
+        id: string;
+        name: string;
+    },
+    breed:{
+        id: string;
+        name: string;
+    }
+}
+
+export interface SpeciesBreed{
+    id: string;
+    name: string;
+}
+
+export type PetsDto = Pet[];

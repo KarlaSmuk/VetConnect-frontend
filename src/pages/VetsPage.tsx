@@ -9,6 +9,7 @@ import NavBarGuests from '../components/NavBar'
 import { ROLE } from '../enums/roles.enum'
 import { getVetsByClinicId } from '../api/veterinarian.service'
 import { getClinicById } from '../api/clinic.service'
+import { UsersDto, Clinic, User } from '../api/types/api.types'
 
 export default function Vets() {
 

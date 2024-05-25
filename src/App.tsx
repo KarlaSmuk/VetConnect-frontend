@@ -12,6 +12,7 @@ import { ROLE } from '../src/enums/roles.enum';
 import Pets from "./pages/PetsPage";
 import Supplies from "./pages/veterinarian/SuppliesPage";
 import Treatments from "./pages/veterinarian/TreatmentsPage";
+import Visits from "./pages/VisitsPage";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Route path='/veterinarians/:clinicId' element={<PrivateRoute component={Vets} roles={ROLE.ADMIN} />} />
         <Route path='/profile' element={<PrivateRoute component={Profile} roles={[ROLE.VET, ROLE.ADMIN, ROLE.OWNER]} />} />
         <Route path='/owner/:ownerId' element={<PrivateRoute component={Pets} roles={[ROLE.OWNER, ROLE.VET]} />} />
+        <Route path='/pet/:petId' element={<PrivateRoute component={Visits} roles={[ROLE.OWNER, ROLE.VET]} />} />
       </Routes>
   )
 }

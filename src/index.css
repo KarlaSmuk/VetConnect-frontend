@@ -15,7 +15,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+input[type='file'] {
+  color: transparent;
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -37,3 +39,5 @@ a:hover {
     background-color: #f9f9f9;
   }
 }
+
+

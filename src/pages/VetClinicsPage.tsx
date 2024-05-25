@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import UpdateWorkingHoursModal from '../components/modals/UpdateWorkingHoursModal'
 import { useAuth } from '../auth/authProvider'
 import { ROLE } from '../enums/roles.enum'
+import { Clinic, ClinicsDto } from '../api/types/api.types'
 
 export default function VetClinics() {
 

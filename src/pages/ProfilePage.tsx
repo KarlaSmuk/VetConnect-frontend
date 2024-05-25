@@ -70,6 +70,9 @@ export default function Profile() {
                             <FormControl>
                                 <FormLabel mb='8px' fontSize='s'>Promijeni ili spremi svoju sliku:</FormLabel>
                                 <input multiple={false} type="file" name="image" accept="image/*" onChange={handleImageInput} />
+                                {file && (
+                                    <Text fontSize={"small"}>{file.name}</Text>
+                                )}
                             </FormControl>
                             <Flex alignItems={'flex-end'}>
                                 <Button
