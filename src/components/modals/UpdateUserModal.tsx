@@ -16,6 +16,8 @@ import { MouseEvent, useEffect, useState } from "react";
 import { updateUser } from "../../api/user.service";
 import { ROLE } from "../../enums/roles.enum";
 import validator from "validator";
+import { UpdateUserDto } from "../../api/types/api.requests.types";
+import { User } from "../../api/types/api.types";
 
 interface CreateUserModalProps {
     isOpen: boolean;

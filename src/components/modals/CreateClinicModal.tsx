@@ -21,6 +21,7 @@ import { createClinic } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
 import validator from "validator";
 import { Clinic } from "../../api/types/api.types";
+import { CreateClinicDto } from "../../api/types/api.requests.types";
 interface CreateClinicModalProps {
     isOpen: boolean;
     onClose: () => void;

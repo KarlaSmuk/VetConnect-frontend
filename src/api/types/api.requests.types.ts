@@ -1,4 +1,6 @@
-type CreateUserDto = {
+import { PetStatus } from "../../enums/petStatus.enum";
+
+export type CreateUserDto = {
     firstName: string;
     lastName: string;
     email: string;
@@ -6,7 +8,7 @@ type CreateUserDto = {
     phoneNumber: string;
 }
 
-type UpdateUserDto = {
+export type UpdateUserDto = {
     id: string;
     firstName?: string;
     lastName?: string;
@@ -14,14 +16,14 @@ type UpdateUserDto = {
     phoneNumber?: string;
 }
 
-type CreateWorkingHours = {
+export type CreateWorkingHours = {
     day: number;
     openingTime: string;
     closingTime: string;
     specialNotes?: string;
 }
 
-type CreateClinicDto = {
+export type CreateClinicDto = {
     oib: string;
     name: string;
     address: string;
@@ -32,7 +34,7 @@ type CreateClinicDto = {
     workingHours: CreateWorkingHours[];
 }
 
-type UpdateClinicInfoDto = {
+export type UpdateClinicInfoDto = {
     id: string;
     oib?: string;
     name?: string;
@@ -43,19 +45,19 @@ type UpdateClinicInfoDto = {
     webAddress?: string;
 }
 
-type UpdateWorkingHours = {
+export type UpdateWorkingHours = {
     day: number;
     openingTime?: string;
     closingTime?: string;
     specialNotes?: string;
 }
 
-type UpdateWorkingHoursDto = {
+export type UpdateWorkingHoursDto = {
     clinicId: string;
     workingHours: CreateWorkingHours[];
 }
 
-type CreatePetDto = {
+export type CreatePetDto = {
     name: string;
     dateOfBirth: Date;
     neutered: boolean;
@@ -63,4 +65,9 @@ type CreatePetDto = {
     color: string;
     breedName: string;
     speciesName: string;
+}
+
+export type UpdatePetStatusDto = {
+    petId: string;
+    status: PetStatus;
 }

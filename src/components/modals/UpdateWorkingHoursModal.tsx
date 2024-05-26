@@ -17,6 +17,8 @@ import {
 import { MouseEvent, useEffect, useState } from "react";
 import { updateWorkingHours } from "../../api/clinic.service";
 import { DayOfWeek } from "../../enums/dayOfWeek.enum";
+import { UpdateWorkingHoursDto } from "../../api/types/api.requests.types";
+import { Clinic } from "../../api/types/api.types";
 
 interface UpdateWorkingHoursModalProps {
     isOpen: boolean;

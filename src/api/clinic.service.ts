@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CreateClinicDto, UpdateClinicInfoDto, UpdateWorkingHoursDto } from './types/api.requests.types';
 
 export const getClinics = async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/clinic`);

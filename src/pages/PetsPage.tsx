@@ -1,10 +1,10 @@
 import { Avatar, Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, CircularProgress, Divider, Flex, FormControl, FormLabel, Heading, IconButton, Text, useDisclosure, useToast } from "@chakra-ui/react"
 import NavBar from "../components/NavBar"
 import { useNavigate, useParams } from "react-router-dom";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { getPetsByOwnerId, uploadPetImage } from "../api/ownerPets.service";
+import { ChangeEvent, FormEvent, MouseEvent, useEffect, useState } from "react";
+import { getPetsByOwnerId, updatePetStatus, uploadPetImage } from "../api/ownerPets.service";
 import { Pet, PetsDto } from "../api/types/api.types";
-import { AddIcon, ArrowForwardIcon, DownloadIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowForwardIcon, DownloadIcon, EditIcon } from "@chakra-ui/icons";
 import CreatePetModal from "../components/modals/CreatePetModal";
 import { useAuth } from "../auth/authProvider";
 import { PetStatus } from "../enums/petStatus.enum";
@@ -61,6 +61,10 @@ export default function Pets() {
         setPets(prev => [...prev, pet]);
     };
 
+    const updatePet = (updatedPet: Pet) => {
+        setPets(prev => prev.map(pet => pet.id === updatedPet.id ? updatedPet : pet));
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>, petId: string) => {
         e.preventDefault();
 
@@ -108,6 +112,25 @@ export default function Pets() {
     };
 
 
+    const handlePetStatus = async (e: MouseEvent<HTMLButtonElement>, petId: string, status: PetStatus) => {
+        e.preventDefault()
+        try {
+            const response = await updatePetStatus({
+                petId: petId,
+                status: status
+            })
+
+            updatePet(response.message)
+            
+        } catch (error) {
+            console.log("Error updating status:", error)
+            toast({
+                title: "Pogreška kod promjene statusa ljubimca.",
+                status: "error",
+            });
+        }
+    }
+
     return (
         <Flex direction={"column"}>
 
@@ -131,19 +154,30 @@ export default function Pets() {
                     <Card key={pet.id} borderWidth='1px' borderRadius='10px' borderColor={'grey.10'} width={'60vw'} padding={5} marginTop={10}>
                         <CardHeader>
                             <Flex>
-                                <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-                                    {pet.photo && (
-                                        <Avatar size={'lg'} name={`${pet.name}`} src={`https://lh3.googleusercontent.com/d/${pet.photo!}`} />
-                                    )}
-                                    <Box>
-                                        <Flex direction={'row'} alignItems={'center'}>
+                                <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap' justifyContent={'space-between'}>
+                                    <Flex>
+                                        {pet.photo && (
+                                            <Avatar mr={3} size={'lg'} name={`${pet.name}`} src={`https://lh3.googleusercontent.com/d/${pet.photo!}`} />
+                                        )}
+                                    
+                                        <Flex direction={'column'} alignItems={'start'} justifyContent={'center'}>
                                             <Heading size='md'>{pet.name}</Heading>
-                                            {pet.status === PetStatus.LOST && (
-                                                <Badge ml={3} alignContent={'center'} borderRadius={5} colorScheme='red'>{pet.status}</Badge>
-                                            )}
+                                            <Text color={'grey'}>{pet.species.name}, {pet.breed.name}</Text>
                                         </Flex>
-                                        <Text color={'grey'}>{pet.species.name}, {pet.breed.name}</Text>
-                                    </Box>
+                                        {pet.status === PetStatus.LOST && (
+                                                <Badge ml={3} height={'max-content'} borderRadius={5} colorScheme='red'>{pet.status}</Badge>
+                                        )}
+                                    </Flex>
+                                    {(currentUser?.vet || currentUser?.owner ) && pet.status === PetStatus.ALIVE && (
+                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.LOST)} rightIcon={<EditIcon />} colorScheme='red' width={'max-content'} height={'25px'} textColor={'white'} mr={10} size='sm'>
+                                            Nestao
+                                        </Button>
+                                    )}
+                                    {(currentUser?.vet || currentUser?.owner ) && pet.status === PetStatus.LOST && (
+                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.ALIVE)} rightIcon={<EditIcon />} colorScheme='green' width={'max-content'} height={'25px'} textColor={'white'} mr={10} size='sm'>
+                                            Pronađen
+                                        </Button>
+                                    )}
                                 </Flex>
                             </Flex>
                         </CardHeader>

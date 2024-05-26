@@ -16,6 +16,8 @@ import { MouseEvent, useEffect, useState } from "react";
 import { ROLE } from "../../enums/roles.enum";
 import { createUser } from "../../api/user.service";
 import validator from "validator";
+import { CreateUserDto } from "../../api/types/api.requests.types";
+import { User } from "../../api/types/api.types";
 
 
 interface CreateUserModalProps {

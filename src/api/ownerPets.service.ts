@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CreatePetDto, UpdatePetStatusDto } from './types/api.requests.types';
 
 export const getOwners = async () => {
   try {
@@ -61,6 +62,17 @@ export const getPetById = async (petId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error during fetching pet:", error);
+    throw error;
+  }
+  
+};
+
+export const updatePetStatus = async (data: UpdatePetStatusDto) => {
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/pet/updatePetStatus`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error during updating pet:", error);
     throw error;
   }
   

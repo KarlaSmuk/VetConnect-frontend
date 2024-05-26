@@ -19,6 +19,7 @@ import {
 import { MouseEvent, useEffect, useState, ChangeEvent } from "react";
 import { createPet, getBreedsBySpeciesId, getSpecies } from "../../api/ownerPets.service";
 import { Pet, SpeciesBreed } from "../../api/types/api.types";
+import { CreatePetDto } from "../../api/types/api.requests.types";
 
 interface CreateClinicModalProps {
     isOpen: boolean;

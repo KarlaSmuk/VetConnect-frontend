@@ -16,6 +16,8 @@ import {
 import { MouseEvent, useEffect, useState } from "react";
 import { updateClinicInfo } from "../../api/clinic.service";
 import validator from "validator";
+import { UpdateClinicInfoDto } from "../../api/types/api.requests.types";
+import { Clinic } from "../../api/types/api.types";
 
 interface UpdateClinicInfoModalProps {
     isOpen: boolean;
