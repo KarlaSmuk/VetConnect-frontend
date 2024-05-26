@@ -71,3 +71,16 @@ export type UpdatePetStatusDto = {
     petId: string;
     status: PetStatus;
 }
+
+export type CreateSupplyDto = {
+    name: string;
+    description?: string;
+    stockQuantity: number;
+    minimumRequired: number;
+}
+
+export type CreateTreatmentDto = {
+    name: string;
+    description?: string;
+    price: number;
+}

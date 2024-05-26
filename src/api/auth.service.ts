@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { LoginRegisterDto, VerifyOTPDto } from './types/auth.types';
 
 export const loginUser = async (loginData: LoginRegisterDto) => {
     try {

@@ -40,7 +40,7 @@ export default function Pets() {
             setPets(response.message);
 
         } catch (error) {
-            console.error("Error geting clinics:", error);
+            console.error("Error fetching clinics:", error);
         }
     }
 
@@ -63,6 +63,10 @@ export default function Pets() {
 
     const updatePet = (updatedPet: Pet) => {
         setPets(prev => prev.map(pet => pet.id === updatedPet.id ? updatedPet : pet));
+    };
+
+    const deletePet = async (petId: string) => {
+        setPets(prev => prev.filter(pet => pet.id !== petId));
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>, petId: string) => {
@@ -119,8 +123,12 @@ export default function Pets() {
                 petId: petId,
                 status: status
             })
-
-            updatePet(response.message)
+            if(status === PetStatus.DECEASED){
+                deletePet(petId)
+            }else{
+                updatePet(response.message)
+            }
+            
             
         } catch (error) {
             console.log("Error updating status:", error)
@@ -168,6 +176,7 @@ export default function Pets() {
                                                 <Badge ml={3} height={'max-content'} borderRadius={5} colorScheme='red'>{pet.status}</Badge>
                                         )}
                                     </Flex>
+                                    <Flex direction={'column'} gap={2}>
                                     {(currentUser?.vet || currentUser?.owner ) && pet.status === PetStatus.ALIVE && (
                                         <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.LOST)} rightIcon={<EditIcon />} colorScheme='red' width={'max-content'} height={'25px'} textColor={'white'} mr={10} size='sm'>
                                             Nestao
@@ -178,6 +187,12 @@ export default function Pets() {
                                             Pronađen
                                         </Button>
                                     )}
+                                    {(currentUser?.vet ) && (
+                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.DECEASED)} rightIcon={<EditIcon />} width={'max-content'} height={'25px'} textColor={'black'} mr={10} size='sm'>
+                                            Preminuo
+                                        </Button>
+                                    )}
+                                    </Flex>
                                 </Flex>
                             </Flex>
                         </CardHeader>

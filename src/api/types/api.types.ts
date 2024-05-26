@@ -60,3 +60,23 @@ export interface SpeciesBreed{
 }
 
 export type PetsDto = Pet[];
+
+export interface Supply {
+    id: string;
+    name: string;
+    description?: string;
+    stockQuantity: number;
+    minimumRequired: number;
+    updated: string;
+}
+
+export type SuppliesDto = Supply[];
+
+export interface Treatment {
+    id: string;
+    name: string;
+    description?: string;
+    price: number;
+}
+
+export type TreatmentsDto = Treatment[];

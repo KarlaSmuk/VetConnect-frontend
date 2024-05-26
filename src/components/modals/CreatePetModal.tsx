@@ -21,7 +21,7 @@ import { createPet, getBreedsBySpeciesId, getSpecies } from "../../api/ownerPets
 import { Pet, SpeciesBreed } from "../../api/types/api.types";
 import { CreatePetDto } from "../../api/types/api.requests.types";
 
-interface CreateClinicModalProps {
+interface CreatePetModalProps {
     isOpen: boolean;
     onClose: () => void;
     ownerId: string;
@@ -33,7 +33,7 @@ export default function CreatePetModal({
     onClose,
     ownerId,
     addNewPet
-}: CreateClinicModalProps) {
+}: CreatePetModalProps) {
 
     const initialPet = {
         name: '',

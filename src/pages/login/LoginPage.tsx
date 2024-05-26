@@ -30,6 +30,12 @@ export default function Login() {
                     status: "success",
                 });
                 navigate("/");
+            }else{
+                toast({
+                    title: "Prijava neuspješna.",
+                    description: "Pogrešan email ili lozinka.",
+                    status: "error"
+                });
             }
         } catch (error) {
             toast({

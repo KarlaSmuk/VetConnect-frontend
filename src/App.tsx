@@ -24,7 +24,7 @@ export default function App() {
         <Route path='/changePassword' element={<ChangePassword />} />
         <Route path='/owners' element={<PrivateRoute component={Owners} roles={ROLE.VET} />} />
         <Route path='/treatments/:clinicId' element={<PrivateRoute component={Treatments} roles={ROLE.VET} />} />
-        <Route path='/supplies/:clinicId' element={<PrivateRoute component={Supplies} roles={ROLE.VET} />} />
+        <Route path='/supplies/' element={<PrivateRoute component={Supplies} roles={ROLE.VET} />} />
         <Route path='/veterinarians/:clinicId' element={<PrivateRoute component={Vets} roles={ROLE.ADMIN} />} />
         <Route path='/profile' element={<PrivateRoute component={Profile} roles={[ROLE.VET, ROLE.ADMIN, ROLE.OWNER]} />} />
         <Route path='/owner/:ownerId' element={<PrivateRoute component={Pets} roles={[ROLE.OWNER, ROLE.VET]} />} />

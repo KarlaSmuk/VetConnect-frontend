@@ -37,7 +37,7 @@ export default function NavBar() {
                     </Link>
                 )}
                 { currentUser?.vet && (
-                    <Link to={`/supplies/${currentUser.vet.clinicId}`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
+                    <Link to={`/supplies`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
                         Zalihe
                     </Link>
                 )}

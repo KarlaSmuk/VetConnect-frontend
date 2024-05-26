@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CreateUserDto, UpdateUserDto } from './types/api.requests.types';
 
 export const createUser = async (user: CreateUserDto, clinicId?: string) => {
   try {
