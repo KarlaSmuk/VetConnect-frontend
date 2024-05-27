@@ -80,3 +80,46 @@ export interface Treatment {
 }
 
 export type TreatmentsDto = Treatment[];
+
+export type Visit = {
+    id: string;
+    time: string;
+    weight: number;
+    temperature: number;
+    diagnosis: string;
+    notes?: string;
+    veterinarian: {
+        id: string;
+        user: {
+            firstName: string;
+            lastName: string;
+            email: string;
+        },
+        clinic: {
+            name: string;
+            email: string;
+        }
+    }
+}
+
+export type VisitsDto = Visit[];
+
+interface InvoiceItem{
+    id: string;
+    quantity: number;
+    totalPrice: string;
+    treatmentId: string;
+    treatmentName: string;
+    treatmentDescription: string;
+}
+
+export type Invoice = {
+    invoice:{
+        id: string;
+        totalPrice: number;
+        createdAt: string;
+    },
+    treatments: InvoiceItem[];
+}
+
+export type InvoicesDto = Invoice[];

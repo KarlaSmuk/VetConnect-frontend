@@ -12,7 +12,7 @@ import { ROLE } from '../src/enums/roles.enum';
 import Pets from "./pages/PetsPage";
 import Supplies from "./pages/veterinarian/SuppliesPage";
 import Treatments from "./pages/veterinarian/TreatmentsPage";
-import Visits from "./pages/VisitsPage";
+import Visits from "./pages/VisitsInvoicesPage";
 
 export default function App() {
   return (

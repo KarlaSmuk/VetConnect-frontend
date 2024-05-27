@@ -84,3 +84,20 @@ export type CreateTreatmentDto = {
     description?: string;
     price: number;
 }
+
+export type CreateVisitDto = {
+    weight: number;
+    temperature: number;
+    diagnosis: string;
+    notes?: string;
+}
+
+type CreateInvoiceItemDto = {
+    treatmentId: string;
+    quantity: number;
+}
+
+export type CreateInvoiceDto = {
+    visitId: string;
+    treatments: CreateInvoiceItemDto[];
+}

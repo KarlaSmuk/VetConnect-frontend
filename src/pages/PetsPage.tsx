@@ -256,7 +256,7 @@ export default function Pets() {
                             <Flex justifyContent={'end'} marginBottom={-5}>
                                 <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
                                     <IconButton onClick={() => navigatePet(pet.id)} aria-label='Posjete' icon={<ArrowForwardIcon boxSize={6} />} />
-                                    <Text color={'gray'}>Dolasci</Text>
+                                    <Text color={'gray'}>Dolasci i računi</Text>
                                 </Flex>
                             </Flex>
                         </CardFooter>
