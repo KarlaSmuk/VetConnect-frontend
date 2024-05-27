@@ -1,8 +1,8 @@
-import { Box, Button, Flex, Heading, Table, TableContainer, Tbody, Th, Thead, Tr, useDisclosure, Text, Input, Td, Editable, EditableInput, EditablePreview, IconButton, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Table, TableContainer, Tbody, Th, Thead, Tr, useDisclosure, Text, Input, Td, Editable, EditableInput, EditablePreview, IconButton, useToast, NumberInput, Textarea } from "@chakra-ui/react"
 import NavBar from "../../components/NavBar"
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
-import { deleteTreatment, getClinicById, getTreatmentsByClinicId, updateTreatment } from "../../api/clinic.service";
+import { deleteTreatment, getClinicById, getTreatmentsByClinicId, updateTreatment, updateTreatmentDescription } from "../../api/clinic.service";
 import { Clinic, Treatment, TreatmentsDto } from "../../api/types/api.types"
 import { useAuth } from "../../auth/authProvider";
 import EditableControls from "../../components/EditableRow";
@@ -20,6 +20,7 @@ export default function Treatments() {
     const [prevTreatmentsListPage, setPrevTreatmentsListPage] = useState(0);
 
     const [newPrice, setNewPrice] = useState<{ [key: string]: string }>({});
+    const [newDescription, setnewDescription] = useState<{ [key: string]: string }>({});
     const [selectedTreatmentId, setSelectedTreatmentId] = useState('');
 
     const { currentUser } = useAuth()
@@ -78,6 +79,24 @@ export default function Treatments() {
         setSelectedTreatmentId(id)
     };
 
+    const handleUpdateDescription= (value: string, id: string) => {
+        setnewDescription(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
+
+        setSelectedTreatmentId(id)
+    };
+
+    function formatNumber(num: string) {
+        const number = parseFloat(num)
+        let str = number.toFixed(2).toString();
+        if(number < 10){
+            str = '0' + str;
+        }
+        return str;
+    }
+
     const handleSubmitPrice = async (value: string) => {
         try {
             const response = await updateTreatment(selectedTreatmentId, parseFloat(value));
@@ -86,6 +105,20 @@ export default function Treatments() {
             
             toast({
                 title: "Pogreška kod ažuriranja cijene",
+                description: "Pokušajte ponovno",
+                status: "error",
+            });
+        }
+    };
+
+    const handleSubmitDescription = async (value: string) => {
+        try {
+            const response = await updateTreatmentDescription(selectedTreatmentId, value);
+            console.log(response)
+        } catch (error) {
+            
+            toast({
+                title: "Pogreška kod ažuriranja opisa",
                 description: "Pokušajte ponovno",
                 status: "error",
             });
@@ -124,7 +157,7 @@ export default function Treatments() {
         <Flex direction={'column'}>
             <NavBar />
             <Flex justifyContent={'center'}>
-                <Heading size='xl' className='mt-10 mb-3 ml-5'>Veterinarska stanica: {clinic?.name}</Heading>
+                <Heading size='xl' className='mt-10 mb-3 ml-5'>{clinic?.name}</Heading>
             </Flex>
             <Flex justifyContent={'space-between'} alignItems={'end'}>
                 <Flex direction={'column'}>
@@ -161,20 +194,33 @@ export default function Treatments() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filteredTreatments.map(treatment => (
+                        {filteredTreatments.slice(prevTreatmentsListPage, treatmentsListPage).map(treatment => (
                             <Tr key={treatment.id}>
                                 <Td>{treatment.name}</Td>
-                                <Td>{treatment.description}</Td>
                                 <Td>
                                     <Editable textAlign='center'
-                                        defaultValue={treatment.price.toString()}
+                                        defaultValue={treatment.description ? treatment.description : '-'}
+                                        value={newDescription[treatment.id]}
+                                        onSubmit={handleSubmitDescription}
+                                        onChange={(newValue) => handleUpdateDescription(newValue, treatment.id)}
+                                    >
+                                        <Flex gap={4}>
+                                            <EditablePreview />
+                                            <Textarea size='sm' as={EditableInput} />
+                                            <EditableControls />
+                                        </Flex>
+                                    </Editable>
+                                </Td>
+                                <Td>
+                                    <Editable textAlign='center'
+                                        defaultValue={formatNumber(treatment.price.toString())}
                                         value={newPrice[treatment.id]}
                                         onSubmit={handleSubmitPrice}
                                         onChange={(newValue) => handleUpdatePrice(newValue, treatment.id)}
                                     >
                                         <Flex gap={4}>
                                             <EditablePreview />
-                                            <Input as={EditableInput} />
+                                            <NumberInput as={EditableInput} />
                                             <EditableControls />
                                         </Flex>
                                     </Editable>

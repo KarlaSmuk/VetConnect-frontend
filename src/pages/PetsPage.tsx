@@ -157,9 +157,9 @@ export default function Pets() {
                     </Button>
                 )}
             </Flex>
-            <Flex direction={'column'} alignItems={"center"} marginBottom={10}>
+            <Flex direction={'row'} alignItems={"center"} justifyContent={'space-evenly'} marginBottom={10} wrap={"wrap"} gap={5}>
                 {pets && pets.map(pet => (
-                    <Card key={pet.id} borderWidth='1px' borderRadius='10px' borderColor={'grey.10'} width={'60vw'} padding={5} marginTop={10}>
+                    <Card key={pet.id} borderWidth='1px' borderRadius='10px' borderColor={'grey.10'} width={"max-content"} padding={5} marginTop={10}>
                         <CardHeader>
                             <Flex>
                                 <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap' justifyContent={'space-between'}>

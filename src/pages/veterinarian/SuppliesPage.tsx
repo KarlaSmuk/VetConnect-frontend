@@ -1,8 +1,8 @@
-import { Box, Button, Flex, Heading, Table, TableContainer, Tbody, Th, Thead, Tr, useDisclosure, Text, Input, Td, Editable, EditableInput, EditablePreview, IconButton, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Table, TableContainer, Tbody, Th, Thead, Tr, useDisclosure, Text, Input, Td, Editable, EditableInput, EditablePreview, IconButton, useToast, Textarea } from "@chakra-ui/react"
 import NavBar from "../../components/NavBar"
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
-import { ChangeEvent, useEffect, useState } from "react";
-import { deleteSupply, getClinicById, getSuppliesByClinicId, updateSupply } from "../../api/clinic.service";
+import { useEffect, useState } from "react";
+import { deleteSupply, getClinicById, getSuppliesByClinicId, updateSupply, updateSupplyDescription } from "../../api/clinic.service";
 import { Clinic, SuppliesDto, Supply } from "../../api/types/api.types";
 import CreateSupplyModal from "../../components/modals/CreateSupplyModal";
 import { useAuth } from "../../auth/authProvider";
@@ -14,12 +14,13 @@ export default function Supplies() {
 
     const [clinic, setClinic] = useState<Clinic>()
     const [supplies, setSupplies] = useState<SuppliesDto>([])
-    const [filteredSupplies, setFilteredSupplies] = useState<SuppliesDto>([]);
     const [filterValue, setFilterValue] = useState('')
+    const [filterField] = useState('Ime');
     const [suppliesListPage, setSuppliesListPage] = useState(10);
     const [prevSuppliesListPage, setPrevSuppliesListPage] = useState(0);
 
     const [newStock, setNewStock] = useState<{ [key: string]: string }>({});
+    const [newDescription, setnewDescription] = useState<{ [key: string]: string }>({});
     const [selectedSupplyId, setSelectedSupplyId] = useState('');
 
     const { currentUser } = useAuth()
@@ -34,6 +35,7 @@ export default function Supplies() {
     useEffect(() => {
         getClinic(currentUser!.vet!.clinicId)
         getSupplies(currentUser!.vet!.clinicId)
+        
     }, [])
 
     useEffect(() => {
@@ -54,7 +56,6 @@ export default function Supplies() {
         try {
             const response = await getSuppliesByClinicId(clinicId)
             setSupplies(response)
-            setFilteredSupplies(response)
 
         } catch (error) {
             console.error("Error fetching supplies:", error);
@@ -63,16 +64,15 @@ export default function Supplies() {
 
     const addNewSupply = (newSupply: Supply) => {
         console.log(newSupply)
-        setFilteredSupplies(prev => [...prev, newSupply]);
+        setSupplies(prev => [...prev, newSupply]);
     };
 
-    const filterByName = (e: ChangeEvent<any>) => {
-        e.preventDefault()
-        const pom = supplies;
-        const filtered = pom.filter(supply => supply.name.toLowerCase().includes(filterValue.toLowerCase()));
-        setFilteredSupplies(filtered);
 
-    };
+    let filteredSupplies = supplies;
+    if(filterField == 'Ime'){
+        
+        filteredSupplies = supplies.filter(s => s.name.toLowerCase().includes(filterValue.toLowerCase()));
+    }
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString).toLocaleDateString()
@@ -90,9 +90,32 @@ export default function Supplies() {
         setSelectedSupplyId(id)
     };
 
+    const handleUpdateDescription = (value: string, id: string) => {
+        setnewDescription(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
+
+        setSelectedSupplyId(id)
+    };
+
     const handleSubmitStock = async (value: string) => {
         try {
             const response = await updateSupply(selectedSupplyId, parseInt(value));
+            console.log(response)
+        } catch (error) {
+            
+            toast({
+                title: "Pogreška kod ažuriranja stanja",
+                description: "Pokušajte ponovno",
+                status: "error",
+            });
+        }
+    };
+
+    const handleSubmitDescription= async (value: string) => {
+        try {
+            const response = await updateSupplyDescription(selectedSupplyId, value);
             console.log(response)
         } catch (error) {
             
@@ -136,7 +159,7 @@ export default function Supplies() {
         <Flex direction={'column'}>
             <NavBar />
             <Flex justifyContent={'center'}>
-                <Heading size='xl' className='mt-10 mb-3 ml-5'>Veterinarska stanica: {clinic?.name}</Heading>
+                <Heading size='xl' className='mt-10 mb-3 ml-5'>{clinic?.name}</Heading>
             </Flex>
             <Flex justifyContent={'space-between'} alignItems={'end'}>
                 <Flex direction={'column'}>
@@ -148,10 +171,7 @@ export default function Supplies() {
                             mr={20}
                             placeholder=''
                             value={filterValue}
-                            onChange={e => {
-                                setFilterValue(e.target.value)
-                                filterByName(e)
-                            }}
+                            onChange={e => setFilterValue(e.target.value)}
                         />
                     </Box>
                 </Flex>
@@ -170,6 +190,7 @@ export default function Supplies() {
                     <Thead>
                         <Tr>
                             <Th>Ime</Th>
+                            <Th>Opis</Th>
                             <Th>Stanje</Th>
                             <Th>Minimalno stanje</Th>
                             <Th>Zadnje izmijenjeno</Th>
@@ -177,15 +198,28 @@ export default function Supplies() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filteredSupplies.map(supply => (
+                        {filteredSupplies.slice(prevSuppliesListPage, suppliesListPage).map(supply => (
                             <Tr key={supply.id}>
                                 <Td>{supply.name}</Td>
+                                <Td>
+                                    <Editable textAlign='center'
+                                        defaultValue={supply.description ? supply.description : '-'}
+                                        value={newDescription[supply.id]}
+                                        onSubmit={handleSubmitDescription}
+                                        onChange={(newValue) => handleUpdateDescription(newValue, supply.id)}
+                                    >
+                                        <Flex gap={4}>
+                                            <EditablePreview />
+                                            <Textarea size='sm' as={EditableInput} />
+                                            <EditableControls />
+                                        </Flex>
+                                    </Editable>
+                                </Td>
                                 <Td>
                                     <Editable textAlign='center'
                                         defaultValue={supply.stockQuantity.toString()}
                                         color={(parseInt(newStock[supply.id]) || supply.stockQuantity) < supply.minimumRequired ? 'red' : 'black'}
                                         value={newStock[supply.id]}
-                                        //key={supply.id}
                                         onSubmit={handleSubmitStock}
                                         onChange={(newValue) => handleUpdateStock(newValue, supply.id)}
                                     >

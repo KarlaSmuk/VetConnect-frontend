@@ -101,7 +101,17 @@ export const deleteSupply = async (supplyId: string) => {
 
 export const updateSupply = async (supplyId: string, stockQuantity: number) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/supply/` + supplyId + '?stockQuantity=' + stockQuantity);
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/supply/price/` + supplyId + '?stockQuantity=' + stockQuantity);
+    return response.data.message;
+  } catch (error) {
+    console.error("Error during updating supply:", error);
+    throw error;
+  }
+}
+
+export const updateSupplyDescription = async (supplyId: string, description: string) => {
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/supply/description/` + supplyId + '?description=' + description);
     return response.data.message;
   } catch (error) {
     console.error("Error during updating supply:", error);
@@ -143,7 +153,17 @@ export const deleteTreatment = async (treatmentId: string) => {
 
 export const updateTreatment = async (treatmentId: string, price: number) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/treatment/` + treatmentId + '?price=' + price);
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/treatment/price/` + treatmentId + '?price=' + price);
+    return response.data.message;
+  } catch (error) {
+    console.error("Error during updating treatment:", error);
+    throw error;
+  }
+}
+
+export const updateTreatmentDescription = async (treatmentId: string, description: string) => {
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/treatment/description/` + treatmentId + '?description=' + description);
     return response.data.message;
   } catch (error) {
     console.error("Error during updating treatment:", error);
