@@ -48,7 +48,7 @@ export default function NavBar() {
                     </Link>
                 )}
                 { currentUser?.vet && (
-                    <Link to={`/appointments/${currentUser.vet.clinicId}`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
+                    <Link to={`/appointments`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
                         Termini
                     </Link>
                 )}
@@ -58,7 +58,7 @@ export default function NavBar() {
                     </Link>
                 )}
                 { currentUser?.owner && (
-                    <Link to={`/appointments/${currentUser.owner.id}`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
+                    <Link to={`/appointments`} className='mx-2	font-normal text-lg hover:text-cyan-500'>
                         Rezervacije termina
                     </Link>
                 )}

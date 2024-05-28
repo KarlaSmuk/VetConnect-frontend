@@ -5,12 +5,12 @@ import calendar from '/calendar.png'
 import invoice from '/invoice.png'
 import catDogImg from '/catdog.jpg'
 import bg from '/bg.png'
-import NavBarGuests from '../components/NavBar'
+import NavBar from '../components/NavBar'
 
 export default function Home() {
     return (
         <>
-            <NavBarGuests />
+            <NavBar />
             <div className='flex mt-10 items-center justify-around'>
                 <div className='ml-12'>
                     <img className='h-auto max-w-full size-96' src={vetConnectText} alt='logo' />

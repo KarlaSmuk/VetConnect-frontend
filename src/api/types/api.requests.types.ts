@@ -92,7 +92,7 @@ export type CreateVisitDto = {
     notes?: string;
 }
 
-type CreateInvoiceItemDto = {
+export type CreateInvoiceItemDto = {
     treatmentId: string;
     quantity: number;
 }

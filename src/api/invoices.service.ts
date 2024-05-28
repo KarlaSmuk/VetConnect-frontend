@@ -7,7 +7,7 @@ export const createInvoice = async (invoiceData: CreateInvoiceDto) => {
       return response.data.message;
     } catch (error) {
       console.error("Error during creating invoices:", error);
-      throw error;
+      return false
     }
     
 };
