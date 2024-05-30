@@ -26,10 +26,10 @@ export default function VisitsInvoices() {
 
 
     return (
-        <Flex direction={'column'} mb={5}>
+        <Flex direction={'column'} mb={5} height={'100vh'} bgColor={'gray.50'}>
             <NavBar />
             <Flex direction={'column'} marginTop={10}>
-                <Flex flex='1' gap='4' marginLeft={5} alignItems='center' flexWrap='wrap'>
+                <Flex flex='1' gap='4' marginLeft={5} alignItems='center' flexWrap='wrap' bgColor={'white'} width={'400px'} padding={5} paddingLeft={1} border={'1px'} borderColor={'gray.200'}>
                     {pet?.photo && (
                         <Avatar size={'xl'} name={`${pet.name}`} src={`https://lh3.googleusercontent.com/d/${pet.photo!}`} />
                     )}

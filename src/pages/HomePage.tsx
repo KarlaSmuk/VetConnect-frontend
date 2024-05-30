@@ -1,4 +1,4 @@
-import { Card, CardBody, Heading, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react'
+import { Card, CardBody, Flex, Heading, Image, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import vetConnectText from '/VetConnect.png'
 import clinic from '/clinic.png'
 import calendar from '/calendar.png'
@@ -9,7 +9,7 @@ import NavBar from '../components/NavBar'
 
 export default function Home() {
     return (
-        <>
+        <Flex direction={'column'}>
             <NavBar />
             <div className='flex mt-10 items-center justify-around'>
                 <div className='ml-12'>
@@ -57,6 +57,6 @@ export default function Home() {
                     </Card>
                 </SimpleGrid>
             </div>
-        </>
+        </Flex>
     )
 }

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useState } from "react";
 import { getPetsByOwnerId, updatePetStatus, uploadPetImage } from "../api/ownerPets.service";
 import { Pet, PetsDto } from "../api/types/api.types";
-import { AddIcon, ArrowForwardIcon, DownloadIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowForwardIcon, DeleteIcon, DownloadIcon, EditIcon } from "@chakra-ui/icons";
 import CreatePetModal from "../components/modals/CreatePetModal";
 import { useAuth } from "../auth/authProvider";
 import { PetStatus } from "../enums/petStatus.enum";
@@ -140,7 +140,7 @@ export default function Pets() {
     }
 
     return (
-        <Flex direction={"column"}>
+        <Flex direction={"column"} minHeight={'100vh'} bgColor={'gray.50'}>
 
             <CreatePetModal
                 isOpen={isCreateOpen}
@@ -150,7 +150,7 @@ export default function Pets() {
             />
             <NavBar />
             <Flex justifyContent={'space-between'} alignItems={'end'}>
-                <Heading size='lg' className='my-10 ml-5 mb-20'>Ljubimci</Heading>
+                <Heading size='lg' className='my-10 ml-5'>Ljubimci</Heading>
                 {currentUser?.vet && (
                     <Button onClick={onCreateOpen} leftIcon={<AddIcon />} colorScheme='green' width={'200px'} height={'30px'} textColor={'white'} mr={10} size='sm'>
                         Dodaj novog ljubimca
@@ -178,18 +178,18 @@ export default function Pets() {
                                     </Flex>
                                     <Flex direction={'column'} gap={2}>
                                     {(currentUser?.vet || currentUser?.owner ) && pet.status === PetStatus.ALIVE && (
-                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.LOST)} rightIcon={<EditIcon />} colorScheme='red' width={'max-content'} height={'25px'} textColor={'white'} mr={10} size='sm'>
+                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.LOST)} rightIcon={<EditIcon />} colorScheme='red' width={'100px'} height={'25px'} textColor={'white'} mr={10} size='sm'>
                                             Nestao
                                         </Button>
                                     )}
                                     {(currentUser?.vet || currentUser?.owner ) && pet.status === PetStatus.LOST && (
-                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.ALIVE)} rightIcon={<EditIcon />} colorScheme='green' width={'max-content'} height={'25px'} textColor={'white'} mr={10} size='sm'>
+                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.ALIVE)} rightIcon={<EditIcon />} colorScheme='green' width={'100px'} height={'25px'} textColor={'white'} mr={10} size='sm'>
                                             Pronađen
                                         </Button>
                                     )}
                                     {(currentUser?.vet ) && (
-                                        <Button onClick={(e) => handlePetStatus(e, pet.id, PetStatus.DECEASED)} rightIcon={<EditIcon />} width={'max-content'} height={'25px'} textColor={'black'} mr={10} size='sm'>
-                                            Preminuo
+                                        <Button  onClick={(e) => handlePetStatus(e, pet.id, PetStatus.DECEASED)} rightIcon={<DeleteIcon />} width={'100px'} height={'25px'} textColor={'black'} mr={10} size='sm'>
+                                            Izbriši
                                         </Button>
                                     )}
                                     </Flex>

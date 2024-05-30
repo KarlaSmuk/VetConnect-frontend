@@ -156,17 +156,19 @@ export default function Supplies() {
     };
 
     return (
-        <Flex direction={'column'}>
+        <Flex direction={'column'} height={'100vh'} bgColor={'gray.50'}>
             <NavBar />
             <Flex justifyContent={'center'}>
                 <Heading size='xl' className='mt-10 mb-3 ml-5'>{clinic?.name}</Heading>
             </Flex>
-            <Flex justifyContent={'space-between'} alignItems={'end'}>
+            <Flex justifyContent={'space-between'} alignItems={'end'} mb={5}>
                 <Flex direction={'column'}>
                     <Heading size='lg' className='my-10 ml-5'>Zalihe</Heading>
                     <Box ml={5}>
                         <Heading size='sm' mb={3}>Pretraži po imenu:</Heading>
                         <Input
+                            bgColor={'white'}
+                            borderColor={'gray.500'}
                             w={'200px'}
                             mr={20}
                             placeholder=''
@@ -185,8 +187,9 @@ export default function Supplies() {
                     addNewSupply={addNewSupply}
                 />
             </Flex>
-            <TableContainer mt={5}>
-                <Table variant='striped' colorScheme='gray'>
+            <Flex bgColor={'gray.50'} direction={'column'}>
+            <TableContainer bgColor={'white'} marginX={2} border={'1px'} borderRadius={'10px'} borderColor={'gray.400'}>
+                <Table >
                     <Thead>
                         <Tr>
                             <Th>Ime</Th>
@@ -210,7 +213,7 @@ export default function Supplies() {
                                     >
                                         <Flex gap={4}>
                                             <EditablePreview />
-                                            <Textarea size='sm' as={EditableInput} />
+                                            <Textarea  width={'max-content'} size='sm' as={EditableInput} />
                                             <EditableControls />
                                         </Flex>
                                     </Editable>
@@ -225,7 +228,7 @@ export default function Supplies() {
                                     >
                                         <Flex gap={4}>
                                             <EditablePreview />
-                                            <Input as={EditableInput} />
+                                            <Input  width={'max-content'} as={EditableInput} />
                                             <EditableControls />
                                         </Flex>
                                     </Editable>
@@ -240,6 +243,7 @@ export default function Supplies() {
                     </Tbody>
                 </Table>
             </TableContainer>
+            </Flex>
             <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3}>
                 <Text fontSize='xs' color={'GrayText'} className=''>Ukupno zaliha: {supplies.length}</Text>
                 {(filteredSupplies.length > 10) &&
@@ -249,14 +253,14 @@ export default function Supplies() {
                                 setPrevSuppliesListPage(prevSuppliesListPage - 10);
                                 setSuppliesListPage(suppliesListPage - 10);
                             }
-                        }} className='mt-2'><ArrowBackIcon /></Button>
+                        }} className='mt-2' bgColor={'gray'} color={'white'}><ArrowBackIcon /></Button>
                         <Button onClick={() => {
                             if (suppliesListPage < filteredSupplies.length) {
                                 setPrevSuppliesListPage(prevSuppliesListPage + 10);
                                 setSuppliesListPage(suppliesListPage + 10);
                             }
 
-                        }} className='mt-2 ml-5'><ArrowForwardIcon /></Button>
+                        }} className='mt-2 ml-5' bgColor={'gray'} color={'white'}><ArrowForwardIcon /></Button>
                     </Flex>
                 }
             </Flex>

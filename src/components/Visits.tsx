@@ -106,6 +106,8 @@ export default function VisitsComponent({ petId }: VisitsProps) {
                     mb={2}
                     flex={1}
                     allowMultiple
+                    bgColor={'white'}
+                    borderColor={'gray.400'}
                 >
                     <AccordionItem>
                         <h2>

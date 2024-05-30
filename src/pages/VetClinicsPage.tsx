@@ -11,6 +11,7 @@ import UpdateWorkingHoursModal from '../components/modals/UpdateWorkingHoursModa
 import { useAuth } from '../auth/authProvider'
 import { ROLE } from '../enums/roles.enum'
 import { Clinic, ClinicsDto } from '../api/types/api.types'
+import bg from '/bg.png'
 
 export default function VetClinics() {
 
@@ -78,7 +79,7 @@ export default function VetClinics() {
     };
 
     return (
-        <>
+        <Flex direction={'column'} minHeight={'100vh'} bgColor={'gray.50'}>
             <NavBarGuests />
 
             <CreateClinicModal
@@ -113,9 +114,9 @@ export default function VetClinics() {
 
             <Box>
                 {clinicsData.map(clinic => (
-                    <Card key={clinic.id} className='m-10' borderWidth='1px' borderRadius='1px' borderColor={'grey'} boxShadow="lg">
+                    <Card key={clinic.id} className='m-10' borderWidth='1px' borderRadius='10px' borderColor={'gray.400'} boxShadow="lg">
                         <CardBody >
-                            <Flex direction="row" justify="space-around" align="center">
+                            <Flex direction="row" justify="space-around" align="center" wrap={'wrap'} gap={4}>
                                 <Box>
                                     <Heading size='lg'>{clinic.name}</Heading>
                                     <Text fontSize='md'>{clinic.county}</Text>
@@ -134,33 +135,31 @@ export default function VetClinics() {
                                 </Box>
                             </Flex>
                         </CardBody>
-                        <Divider />
+                        <Divider width={'70vw'} alignSelf={'center'} />
                         {currentUser?.user.role == ROLE.ADMIN && (
                             <CardFooter>
-                                <Flex alignItems={'center'} width="100%">
-                                    <Flex marginLeft={20} flex={1} justifyContent={'center'}>
+                                <Flex justifyContent={'center'} alignItems={'center'} width="100%" wrap={'wrap'} gap={4}>
+                                    <Flex  flex={1} justifyContent={'center'}  wrap={'wrap'} gap={4}>
                                         <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
                                             <IconButton onClick={() => {
-                                                console.log('clinic.id:', clinic.id); // Debugging log
                                                 setSelectedClinicId(clinic.id);
-                                                console.log('selectedClinicId after set:', selectedClinicId);
                                                 onUpdateInfoOpen()
-                                            }} colorScheme='green' aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
+                                            }} colorScheme='green'  aria-label='Uredi podatke o klinici' icon={<EditIcon />} />
 
-                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
+                                            <Text align={'center'}  fontSize={'small'} color={'gray'}>Uredi podatke o klinici</Text>
                                         </Flex>
 
-                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
                                             <IconButton onClick={() => {
                                                 setSelectedClinic(clinic!)
                                                 onUpdateHoursOpen()
                                             }} colorScheme='blue' aria-label='Uredi radno vrijeme' icon={<EditIcon />} />
 
-                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
+                                            <Text align={'center'}  fontSize={'small'} color={'gray'}>Uredi radno vrijeme</Text>
                                         </Flex>
-                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} marginLeft={6}>
+                                        <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} >
                                             <IconButton colorScheme='red' aria-label='Izbriši kliniku' icon={<DeleteIcon />} onClick={() => handleDelete(clinic.id)} />
-                                            <Text marginTop={2} fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
+                                            <Text align={'center'}  fontSize={'small'} color={'gray'}>Izbriši kliniku</Text>
                                         </Flex>
                                     </Flex>
                                     <Flex justifyContent={'end'}>
@@ -178,7 +177,6 @@ export default function VetClinics() {
                     </Card>
                 ))}
             </Box>
-
-        </>
+        </Flex>
     )
 }

@@ -13,7 +13,7 @@ export default function NavBar() {
     };
 
     return (
-        <div className='w-full h-full flex items-center justify-between shadow-sm'>
+        <div className='w-full flex items-center justify-between border-b-2 bg-white'>
             <nav className='m-5 my-8 flex items-center '>
                 { currentUser && (
                     <Avatar

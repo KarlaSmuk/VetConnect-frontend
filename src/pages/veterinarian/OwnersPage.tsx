@@ -132,22 +132,26 @@ export default function Owners() {
     };
 
     return (
-        <>
+        <Flex direction={'column'} height={'100vh'} bgColor={'gray.50'}>
             <NavBarGuests />
-            <Flex justifyContent={'space-between'} alignItems={'end'}>
+            <Flex justifyContent={'space-between'} alignItems={'end'} mb={5}>
                 <Flex direction={'column'}>
                     <Heading size='lg' className='my-10 ml-5'>Vlasnici</Heading>
                     <Box ml={5}>
                         <Heading size='sm' mb={3}>Pretraži:</Heading>
                         <Input
+                            bgColor={'white'}
                             w={'200px'}
+                            borderColor={'gray.500'}
                             mr={20}
                             placeholder=''
                             value={filterValue}
                             onChange={e => setFilterValue(e.target.value)}
                         />
                         <Select
+                            bgColor={'white'}
                             w={'200px'}
+                            borderColor={'gray.500'}
                             mr={20}
                             mt={5}
                             className='cursor-pointer'
@@ -173,8 +177,9 @@ export default function Owners() {
                     addNewUser={addNewUser}
                 />
             </Flex>
-            <TableContainer mt={5}>
-                <Table variant='striped' colorScheme='gray'>
+            <Flex bgColor={'gray.50'} direction={'column'}>
+            <TableContainer bgColor={'white'} marginX={2} border={'1px'} borderRadius={'10px'} borderColor={'gray.400'}>
+                <Table>
                     <Thead>
                         <Tr>
                             <Th></Th>
@@ -226,6 +231,7 @@ export default function Owners() {
                     </Tbody>
                 </Table>
             </TableContainer>
+            </Flex>
             <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3}>
                 <Text fontSize='xs' color={'GrayText'} className=''>Ukupno vlasnika: {filteredOwners.length}</Text>
                 {(filteredOwners.length > 10) &&
@@ -246,6 +252,6 @@ export default function Owners() {
                     </Flex>
                 }
             </Flex>
-        </>
+        </Flex>
     )
 }

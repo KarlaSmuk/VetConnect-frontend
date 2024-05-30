@@ -64,13 +64,13 @@ export default function Treatments() {
         setTreatments(prev => [...prev, newTreatment]);
     };
 
-    
+
     let filteredTreatments = treatments;
-    if(filterField == 'Ime'){
+    if (filterField == 'Ime') {
         filteredTreatments = treatments.filter(t => t.name.toLowerCase().includes(filterValue.toLowerCase()));
     }
 
-    const handleUpdatePrice= (value: string, id: string) => {
+    const handleUpdatePrice = (value: string, id: string) => {
         setNewPrice(prevState => ({
             ...prevState,
             [id]: value
@@ -79,7 +79,7 @@ export default function Treatments() {
         setSelectedTreatmentId(id)
     };
 
-    const handleUpdateDescription= (value: string, id: string) => {
+    const handleUpdateDescription = (value: string, id: string) => {
         setnewDescription(prevState => ({
             ...prevState,
             [id]: value
@@ -91,7 +91,7 @@ export default function Treatments() {
     function formatNumber(num: string) {
         const number = parseFloat(num)
         let str = number.toFixed(2).toString();
-        if(number < 10){
+        if (number < 10) {
             str = '0' + str;
         }
         return str;
@@ -102,7 +102,7 @@ export default function Treatments() {
             const response = await updateTreatment(selectedTreatmentId, parseFloat(value));
             console.log(response)
         } catch (error) {
-            
+
             toast({
                 title: "Pogreška kod ažuriranja cijene",
                 description: "Pokušajte ponovno",
@@ -116,7 +116,7 @@ export default function Treatments() {
             const response = await updateTreatmentDescription(selectedTreatmentId, value);
             console.log(response)
         } catch (error) {
-            
+
             toast({
                 title: "Pogreška kod ažuriranja opisa",
                 description: "Pokušajte ponovno",
@@ -154,17 +154,19 @@ export default function Treatments() {
     };
 
     return (
-        <Flex direction={'column'}>
+        <Flex direction={'column'} height={'100vh'} bgColor={'gray.50'}>
             <NavBar />
             <Flex justifyContent={'center'}>
                 <Heading size='xl' className='mt-10 mb-3 ml-5'>{clinic?.name}</Heading>
             </Flex>
-            <Flex justifyContent={'space-between'} alignItems={'end'}>
+            <Flex justifyContent={'space-between'} alignItems={'end'} mb={5}>
                 <Flex direction={'column'}>
                     <Heading size='lg' className='my-10 ml-5'>Tretmani</Heading>
                     <Box ml={5}>
                         <Heading size='sm' mb={3}>Pretraži po imenu:</Heading>
                         <Input
+                            bgColor={'white'}
+                            borderColor={'gray.500'}
                             w={'200px'}
                             mr={20}
                             placeholder=''
@@ -183,75 +185,78 @@ export default function Treatments() {
                     addNewTreatment={addNewTreatment}
                 />
             </Flex>
-            <TableContainer mt={5}>
-                <Table variant='striped' colorScheme='gray'>
-                    <Thead>
-                        <Tr>
-                            <Th>Ime</Th>
-                            <Th>Opis</Th>
-                            <Th>Cijena</Th>
-                            <Th></Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {filteredTreatments.slice(prevTreatmentsListPage, treatmentsListPage).map(treatment => (
-                            <Tr key={treatment.id}>
-                                <Td>{treatment.name}</Td>
-                                <Td>
-                                    <Editable textAlign='center'
-                                        defaultValue={treatment.description ? treatment.description : '-'}
-                                        value={newDescription[treatment.id]}
-                                        onSubmit={handleSubmitDescription}
-                                        onChange={(newValue) => handleUpdateDescription(newValue, treatment.id)}
-                                    >
-                                        <Flex gap={4}>
-                                            <EditablePreview />
-                                            <Textarea size='sm' as={EditableInput} />
-                                            <EditableControls />
-                                        </Flex>
-                                    </Editable>
-                                </Td>
-                                <Td>
-                                    <Editable textAlign='center'
-                                        defaultValue={formatNumber(treatment.price.toString())}
-                                        value={newPrice[treatment.id]}
-                                        onSubmit={handleSubmitPrice}
-                                        onChange={(newValue) => handleUpdatePrice(newValue, treatment.id)}
-                                    >
-                                        <Flex gap={4}>
-                                            <EditablePreview />
-                                            <NumberInput as={EditableInput} />
-                                            <EditableControls />
-                                        </Flex>
-                                    </Editable>
-                                </Td>
-                                <Td>                                    
-                                    <IconButton icon={<DeleteIcon />} onClick={handleDelete(treatment.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete'} bgColor={'transparent'} />
-                                </Td>
+            <Flex bgColor={'gray.50'} direction={'column'}>
+                <TableContainer  bgColor={'white'} marginX={2} border={'1px'} borderRadius={'10px'} borderColor={'gray.400'}>
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>Ime</Th>
+                                <Th>Opis</Th>
+                                <Th>Cijena</Th>
+                                <Th></Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
-            <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3}>
-                <Text fontSize='xs' color={'GrayText'} className=''>Ukupno zaliha: {filteredTreatments.length}</Text>
-                {(filteredTreatments.length > 10) &&
-                    <Flex flexDirection={'row'} marginBottom={5}>
-                        <Button onClick={() => {
-                            if (treatmentsListPage > 10) {
-                                setPrevTreatmentsListPage(prevTreatmentsListPage - 10);
-                                setTreatmentsListPage(treatmentsListPage - 10);
-                            }
-                        }} className='mt-2'><ArrowBackIcon /></Button>
-                        <Button onClick={() => {
-                            if (treatmentsListPage < filteredTreatments.length) {
-                                setPrevTreatmentsListPage(prevTreatmentsListPage + 10);
-                                setTreatmentsListPage(treatmentsListPage + 10);
-                            }
+                        </Thead>
+                        <Tbody>
+                            {filteredTreatments.slice(prevTreatmentsListPage, treatmentsListPage).map(treatment => (
+                                <Tr key={treatment.id}>
+                                    <Td>{treatment.name}</Td>
+                                    <Td>
+                                        <Editable textAlign='center'
+                                            defaultValue={treatment.description ? treatment.description : '-'}
+                                            value={newDescription[treatment.id]}
+                                            onSubmit={handleSubmitDescription}
+                                            onChange={(newValue) => handleUpdateDescription(newValue, treatment.id)}
+                                        >
+                                            <Flex gap={4}>
+                                                <EditablePreview />
+                                                <Textarea width={'max-content'} size='sm' as={EditableInput} />
+                                                <EditableControls />
+                                            </Flex>
+                                        </Editable>
+                                    </Td>
+                                    <Td>
+                                        <Editable 
+                                            textAlign='center'
+                                            defaultValue={formatNumber(treatment.price.toString())}
+                                            value={newPrice[treatment.id]}
+                                            onSubmit={handleSubmitPrice}
+                                            onChange={(newValue) => handleUpdatePrice(newValue, treatment.id)}
+                                        >
+                                            <Flex gap={4}>
+                                                <EditablePreview />
+                                                <NumberInput  width={'max-content'} as={EditableInput} />
+                                                <EditableControls />
+                                            </Flex>
+                                        </Editable>
+                                    </Td>
+                                    <Td>                                    
+                                        <IconButton icon={<DeleteIcon />} onClick={handleDelete(treatment.id)} boxSize={6} color={'red'} marginLeft={7} aria-label={'Delete'} bgColor={'transparent'} />
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+                <Flex flexDirection={'column'} alignItems={'end'} marginRight={20} marginTop={3} marginBottom={2}>
+                    <Text fontSize='xs' color={'GrayText'} className=''>Ukupno zaliha: {filteredTreatments.length}</Text>
+                    {(filteredTreatments.length > 10) &&
+                        <Flex flexDirection={'row'} marginBottom={5}>
+                            <Button onClick={() => {
+                                if (treatmentsListPage > 10) {
+                                    setPrevTreatmentsListPage(prevTreatmentsListPage - 10);
+                                    setTreatmentsListPage(treatmentsListPage - 10);
+                                }
+                            }} className='mt-2' bgColor={'gray'} color={'white'}><ArrowBackIcon /></Button>
+                            <Button onClick={() => {
+                                if (treatmentsListPage < filteredTreatments.length) {
+                                    setPrevTreatmentsListPage(prevTreatmentsListPage + 10);
+                                    setTreatmentsListPage(treatmentsListPage + 10);
+                                }
 
-                        }} className='mt-2 ml-5'><ArrowForwardIcon /></Button>
-                    </Flex>
-                }
+                            }} className='mt-2 ml-5' bgColor={'gray'} color={'white'}><ArrowForwardIcon /></Button>
+                        </Flex>
+                    }
+                </Flex>
             </Flex>
         </Flex>
     )

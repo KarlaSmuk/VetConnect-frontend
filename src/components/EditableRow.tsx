@@ -2,6 +2,7 @@ import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons"
 import { ButtonGroup, Flex, IconButton, useEditableControls } from "@chakra-ui/react"
 
 export default function EditableControls() {
+    
     const {
         isEditing,
         getSubmitButtonProps,
