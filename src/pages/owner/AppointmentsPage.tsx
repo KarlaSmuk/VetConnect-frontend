@@ -32,7 +32,6 @@ import { CreateAppointmentDto } from "../../api/types/api.requests.types";
 export default function Appointments() {
     const [clinics, setClinics] = useState<ClinicsDto>([]);
     const [pets, setPets] = useState<PetsDto>([]);
-    const [selectedClinic, setSelectedClinic] = useState('');
     const [selectedClinicWH, setSelectedClinicWH] = useState<WorkingHours[]>();
     const [selectedDateTime, setSelectedDateTime] = useState("");
     const [selectedPet, setSelectedPet] = useState("");
@@ -234,7 +233,7 @@ export default function Appointments() {
                                 <PopoverBody>
                                     {selectedClinicWH.map(wh => (
                                         <Text key={wh.id} fontSize='sm'>
-                                            {`${DayOfWeek[wh.day]}: ${wh.openingTime.substring(0, 5)} - ${wh.closingTime.substring(0, 5)}`}
+                                            {`${DayOfWeek[wh.day]}: ${wh.openingTime} - ${wh.closingTime}`}
                                             {wh.specialNotes && ` (${wh.specialNotes})`}
                                         </Text>
                                     ))}

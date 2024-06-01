@@ -11,7 +11,6 @@ import UpdateWorkingHoursModal from '../components/modals/UpdateWorkingHoursModa
 import { useAuth } from '../auth/authProvider'
 import { ROLE } from '../enums/roles.enum'
 import { Clinic, ClinicsDto } from '../api/types/api.types'
-import bg from '/bg.png'
 
 export default function VetClinics() {
 
@@ -128,7 +127,7 @@ export default function VetClinics() {
                                     <Heading size='md' className='mb-3'>Radno vrijeme</Heading>
                                     {clinic.workingHours.map(wh => (
                                         <Text key={wh.id} fontSize='sm'>
-                                            {`${DayOfWeek[wh.day]}: ${wh.openingTime.substring(0, 5)} - ${wh.closingTime.substring(0, 5)}`}
+                                            {`${DayOfWeek[wh.day]}: ${wh.openingTime} - ${wh.closingTime}`}
                                             {wh.specialNotes && ` (${wh.specialNotes})`}
                                         </Text>
                                     ))}
