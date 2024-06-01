@@ -101,7 +101,7 @@ export const deleteSupply = async (supplyId: string) => {
 
 export const updateSupply = async (supplyId: string, stockQuantity: number) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/supply/price/` + supplyId + '?stockQuantity=' + stockQuantity);
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/clinic/supply/stock/` + supplyId + '?stockQuantity=' + stockQuantity);
     return response.data.message;
   } catch (error) {
     console.error("Error during updating supply:", error);

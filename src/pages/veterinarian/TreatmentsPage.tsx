@@ -207,9 +207,9 @@ export default function Treatments() {
                                             onSubmit={handleSubmitDescription}
                                             onChange={(newValue) => handleUpdateDescription(newValue, treatment.id)}
                                         >
-                                            <Flex gap={4}>
+                                            <Flex gap={4} alignItems={'center'}>
                                                 <EditablePreview />
-                                                <Textarea width={'max-content'} size='sm' as={EditableInput} />
+                                                <Textarea width={'max-content'} as={EditableInput} />
                                                 <EditableControls />
                                             </Flex>
                                         </Editable>
@@ -222,7 +222,7 @@ export default function Treatments() {
                                             onSubmit={handleSubmitPrice}
                                             onChange={(newValue) => handleUpdatePrice(newValue, treatment.id)}
                                         >
-                                            <Flex gap={4}>
+                                            <Flex gap={4} alignItems={'center'}>
                                                 <EditablePreview />
                                                 <NumberInput  width={'max-content'} as={EditableInput} />
                                                 <EditableControls />

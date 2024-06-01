@@ -101,3 +101,10 @@ export type CreateInvoiceDto = {
     visitId: string;
     treatments: CreateInvoiceItemDto[];
 }
+
+export type CreateAppointmentDto = {
+    petId: string;
+    clinicId: string;
+    time: Date;
+    purpose: string;
+}

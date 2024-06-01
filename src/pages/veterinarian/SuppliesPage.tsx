@@ -102,7 +102,9 @@ export default function Supplies() {
     const handleSubmitStock = async (value: string) => {
         try {
             const response = await updateSupply(selectedSupplyId, parseInt(value));
-            console.log(response)
+            setSupplies(prevState => prevState.map(supply =>
+                supply.id === selectedSupplyId ? {...supply, updated: response.updatedAt} : supply
+            ))
         } catch (error) {
             
             toast({
@@ -211,7 +213,7 @@ export default function Supplies() {
                                         onSubmit={handleSubmitDescription}
                                         onChange={(newValue) => handleUpdateDescription(newValue, supply.id)}
                                     >
-                                        <Flex gap={4}>
+                                        <Flex gap={4} alignItems={'center'}>
                                             <EditablePreview />
                                             <Textarea  width={'max-content'} size='sm' as={EditableInput} />
                                             <EditableControls />
@@ -226,7 +228,7 @@ export default function Supplies() {
                                         onSubmit={handleSubmitStock}
                                         onChange={(newValue) => handleUpdateStock(newValue, supply.id)}
                                     >
-                                        <Flex gap={4}>
+                                        <Flex gap={4} alignItems={'center'}>
                                             <EditablePreview />
                                             <Input  width={'max-content'} as={EditableInput} />
                                             <EditableControls />

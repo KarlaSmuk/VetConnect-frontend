@@ -13,7 +13,7 @@ import Pets from "./pages/PetsPage";
 import Supplies from "./pages/veterinarian/SuppliesPage";
 import Treatments from "./pages/veterinarian/TreatmentsPage";
 import Visits from "./pages/VisitsInvoicesPage";
-import Appointments from "./pages/AppointmentsPage";
+import Appointments from "./pages/owner/AppointmentsPage";
 
 export default function App() {
   return (
