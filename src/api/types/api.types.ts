@@ -123,3 +123,18 @@ export type Invoice = {
 }
 
 export type InvoicesDto = Invoice[];
+
+export type Appointment = {
+    clinic?: Clinic;
+    pet?: Pet;
+    time: string;
+    purpose: string;
+    status: string;
+    id: string;
+};
+
+export type OwnerAppointmentsDto = {
+    [petId: string]: Appointment[];
+};
+
+export type VetsAppointmentsDto = Appointment[];

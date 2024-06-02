@@ -1,3 +1,4 @@
+import { AppointmentStatus } from "../../enums/appointmentStatus.enum";
 import { PetStatus } from "../../enums/petStatus.enum";
 
 export type CreateUserDto = {
@@ -107,4 +108,9 @@ export type CreateAppointmentDto = {
     clinicId: string;
     time: Date;
     purpose: string;
+}
+
+export type UpdateAppointmentStatusDto = {
+    appointmentId: string;
+    status: AppointmentStatus;
 }

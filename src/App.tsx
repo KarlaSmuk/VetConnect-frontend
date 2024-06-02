@@ -13,7 +13,8 @@ import Pets from "./pages/PetsPage";
 import Supplies from "./pages/veterinarian/SuppliesPage";
 import Treatments from "./pages/veterinarian/TreatmentsPage";
 import Visits from "./pages/VisitsInvoicesPage";
-import Appointments from "./pages/owner/AppointmentsPage";
+import AppointmentsOwners from "./pages/owner/AppointmentsPage";
+import AppointmentsVets from "./pages/veterinarian/AppointmentsPage";
 
 export default function App() {
   return (
@@ -26,12 +27,12 @@ export default function App() {
         <Route path='/owners' element={<PrivateRoute component={Owners} roles={ROLE.VET} />} />
         <Route path='/treatments/:clinicId' element={<PrivateRoute component={Treatments} roles={ROLE.VET} />} />
         <Route path='/supplies/' element={<PrivateRoute component={Supplies} roles={ROLE.VET} />} />
-        <Route path='/veterinarians/:clinicId' element={<PrivateRoute component={Vets} roles={ROLE.ADMIN} />} />
+        <Route path='/veterinarians/:clinicId' element={<PrivateRoute component={Vets} roles={[ROLE.ADMIN, ROLE.VET]} />} />
         <Route path='/profile' element={<PrivateRoute component={Profile} roles={[ROLE.VET, ROLE.ADMIN, ROLE.OWNER]} />} />
         <Route path='/owner/:ownerId' element={<PrivateRoute component={Pets} roles={[ROLE.OWNER, ROLE.VET]} />} />
         <Route path='/pet/:petId' element={<PrivateRoute component={Visits} roles={[ROLE.OWNER, ROLE.VET]} />} />
-        <Route path='/appointments' element={<PrivateRoute component={Appointments} roles={[ROLE.OWNER, ROLE.VET]} />} />
-
+        <Route path='/owner/appointments' element={<PrivateRoute component={AppointmentsOwners} roles={ROLE.OWNER} />} />
+        <Route path='/vet/appointments' element={<PrivateRoute component={AppointmentsVets} roles={ROLE.VET} />} />
       </Routes>
   )
 }
