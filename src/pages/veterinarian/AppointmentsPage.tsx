@@ -109,7 +109,8 @@ export default function AppointmentsVets() {
                                                     colorScheme="red"
                                                     textColor={"white"}
                                                     size={'s'} 
-                                                    aria-label={"No-show"}    
+                                                    aria-label={"No-show"}
+                                                    isDisabled={new Date(appointment.time) > new Date()} 
                                                 />
                                                 <IconButton
                                                     icon={<CheckIcon />}
@@ -119,7 +120,9 @@ export default function AppointmentsVets() {
                                                     colorScheme="green"
                                                     textColor={"white"}
                                                     size={'s'} 
-                                                    aria-label={"Completed"}                                            
+                                                    aria-label={"Completed"} 
+                                                    isDisabled={new Date(appointment.time) > new Date()} 
+                                          
                                                 />
                                             </Flex>
                                         </Flex>

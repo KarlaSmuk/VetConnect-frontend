@@ -170,7 +170,7 @@ export default function AppointmentsOwners() {
                 toast({
                     title: "Pogrešan termin!",
                     description:
-                        "Provjerite radno vrijeme za kliniku na ikoni informacije.",
+                        "Provjerite radno vrijeme za veterinrasku stanicu na ikoni informacije.",
                     status: "error",
                 });
             } else if (response.message.nextTime) {
@@ -238,7 +238,7 @@ export default function AppointmentsOwners() {
                     name="clinicId"
                     value={appointment.clinicId}
                     onChange={handleClinicChange}
-                    placeholder="Odaberi kliniku"
+                    placeholder="Odaberi stanicu"
                     mr={2}
                     mb={5}
                     width={"50vw"}
@@ -286,7 +286,7 @@ export default function AppointmentsOwners() {
                             max={formatDateTime(maxAllowedDate)}
                         />
                         <FormHelperText fontSize={"small"} color={"gray"}>
-                            Ne možete rezervirati vrijeme 30 minuta prije kraja rada.
+                            Ne možete rezervirati vrijeme 30 minuta prije kraja radnog vremena.
                         </FormHelperText>
                     </FormControl>
                     {selectedClinicWH && (
