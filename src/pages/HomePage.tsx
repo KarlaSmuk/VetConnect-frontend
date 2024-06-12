@@ -9,8 +9,9 @@ import NavBar from '../components/NavBar'
 
 export default function Home() {
     return (
-        <Flex direction={'column'}>
+        <Flex direction={'column'} minHeight={'100vh'} justifyContent={'space-between'}>
             <NavBar />
+            <Flex direction={'column'}>
             <div className='flex mt-10 items-center justify-around'>
                 <div className='ml-12'>
                     <img className='h-auto max-w-full size-96' src={vetConnectText} alt='logo' />
@@ -19,8 +20,7 @@ export default function Home() {
                 <img className='size-1/3' src={catDogImg} alt='dog' />
             </div>
 
-            <div className='relative w-full h-full flex justify-center'>
-                <img className='w-full h-full' src={bg} alt='background' />
+            <Flex position={'relative'} justifyContent={'center'} bgImage={bg} h={'55vh'} bgSize={'cover'} bgPosition={'center'} bgRepeat={'no-repeat'}>
                 <SimpleGrid className='absolute top-20 p-4 w-full justify-evenly my-auto' spacing={4} templateColumns='repeat(3, minmax(290px, 100px))'>
                     <Card className='flex items-center justify-center'>
                         <CardBody className='flex flex-col items-center justify-center text-center bg-cyan-50 shadow-lg'>
@@ -56,7 +56,8 @@ export default function Home() {
                         </CardBody>
                     </Card>
                 </SimpleGrid>
-            </div>
+            </Flex>
+            </Flex>
         </Flex>
     )
 }

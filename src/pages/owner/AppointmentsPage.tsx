@@ -41,6 +41,7 @@ import {
 } from "../../api/appointment.service";
 import { CreateAppointmentDto } from "../../api/types/api.requests.types";
 import { AppointmentStatus } from "../../enums/appointmentStatus.enum";
+import { PetStatus } from "../../enums/petStatus.enum";
 
 export default function AppointmentsOwners() {
     const [clinics, setClinics] = useState<ClinicsDto>([]);
@@ -159,6 +160,14 @@ export default function AppointmentsOwners() {
         console.log(response);
         if (response.success) {
             addNewAppointment(response.message);
+            setAppointment({
+                clinicId: "",
+                petId: "",
+                time: minAllowedDate,
+                purpose: "",
+            })
+            setSelectedClinicWH([])
+            setSelectedPet('')
             toast({
                 title: "Termin rezerviran!",
                 status: "success",
@@ -265,9 +274,11 @@ export default function AppointmentsOwners() {
                     width={"50vw"}
                 >
                     {pets.map((pet) => (
-                        <option key={pet.id} value={pet.id}>
-                            {`${pet.name}`}
-                        </option>
+                        pet.status == PetStatus.ALIVE && (
+                            <option key={pet.id} value={pet.id}>
+                                {`${pet.name}`}
+                            </option>
+                        )
                     ))}
                 </Select>
                 <Flex alignItems={"center"} width={"90%"}>

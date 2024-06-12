@@ -52,7 +52,7 @@ export default function CreateSupplyModal({
 
     const handleInputChange = (event: ChangeEvent<any>) => {
         const name = event.target.name;
-        if(name == 'minimunRequired' || name == 'stockQuantity'){
+        if(name == 'minimumRequired' || name == 'stockQuantity'){
             const value = parseInt(event.target.value)
 
             setSupply(prev => ({ ...prev, [name]: value }));
@@ -73,9 +73,9 @@ export default function CreateSupplyModal({
 
 
         } catch (error) {
-            console.error('Error during creating clinic.');
+            console.error('Error during creating supply.');
             toast({
-                title: "Pogreška kod dodavanja nove klinike.",
+                title: "Pogreška kod dodavanja nove zalihe.",
                 status: "error",
             });
         }

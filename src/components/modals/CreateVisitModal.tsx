@@ -74,7 +74,7 @@ export default function CreateVisitModal({
         const response = await createVisit(petId, vetId, visit);
         if(!response){
             toast({
-                title: "Pogreška kod dodavanja novog posjeta.",
+                title: "Pogreška kod dodavanja novog dolaska.",
                 status: "error",
             });
         }
@@ -89,7 +89,7 @@ export default function CreateVisitModal({
         <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Dodaj novu posjetu</ModalHeader>
+                <ModalHeader>Dodaj novi dolazak</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <FormControl mt={4} isRequired>
@@ -120,7 +120,7 @@ export default function CreateVisitModal({
                             />
                         </NumberInput>
                     </FormControl>
-                    <FormControl mt={4}>
+                    <FormControl mt={4} isRequired>
                         <FormLabel>Dijagnoza</FormLabel>
                         <Input
                             value={visit.diagnosis}

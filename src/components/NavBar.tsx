@@ -23,22 +23,21 @@ export default function NavBar() {
                         onClick={() => navigate("/profile")} //, {state: {user: currentUser.user}})
                     />
                 )}
-                {currentUser && (
-                    <Link
-                        to="/"
-                        className="ml-4 mr-4 font-normal text-lg hover:text-cyan-500"
-                    >
-                        Naslovna
-                    </Link>
-                )}
-                {currentUser && (
-                    <Link
-                        to="/clinics"
-                        className="mx-2	font-normal text-lg hover:text-cyan-500"
-                    >
-                        Veterinarske stanice
-                    </Link>
-                )}
+
+                <Link
+                    to="/"
+                    className="ml-4 mr-4 font-normal text-lg hover:text-cyan-500"
+                >
+                    Naslovna
+                </Link>
+
+                <Link
+                    to="/clinics"
+                    className="mx-2	font-normal text-lg hover:text-cyan-500"
+                >
+                    Veterinarske stanice
+                </Link>
+
                 {currentUser?.vet && (
                     <Link
                         to={`/treatments/${currentUser.vet.clinicId}`}

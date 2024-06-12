@@ -75,8 +75,18 @@ export const updatePetStatus = async (data: UpdatePetStatusDto) => {
     console.error("Error during updating pet:", error);
     throw error;
   }
-  
 };
+
+export const updatePetNeutered = async (petId: string) => {
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/pet/updatePetNeutered/${petId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error during updating pet:", error);
+    throw error;
+  }
+};
+
 
 export const uploadPetImage = async (petId: string, file: FormData) => {
   try {

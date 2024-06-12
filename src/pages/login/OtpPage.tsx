@@ -43,7 +43,7 @@ export default function OtpVerification() {
             }else{
                 toast({
                     title: "Pogrešan email ili jednokratna lozinka",
-                    description: "Obratite se veterinaru za drugu jednokratnu lozinku ili unesite ispravan email.",
+                    description: "Obratite se veterinaru za drugu jednokratnu lozinku ili unesite ispravne podatke.",
                     status: "error",
                 });
             }

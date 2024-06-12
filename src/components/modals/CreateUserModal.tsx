@@ -77,13 +77,21 @@ export default function CreateUserModal({
                 onClose();
             }
             
-        } catch (error) {
-            console.log('Failed to create user. Please check your input and try again.');
-            
-            toast({
-                title: "Nesupješno dodavanje novog vlasnika",
-                status: "error",
-            });
+        } catch (error: any) {
+
+            if(error.response.data.message.includes('duplicate key')){
+                toast({
+                    title: "Neuspješno dodavanje novog vlasnika",
+                    description:"Email se već koristi",
+                    status: "error",
+                });
+            }else{
+                toast({
+                    title: "Neuspješno dodavanje novog vlasnika.",
+                    description:"Pokušajte ponovno",
+                    status: "error",
+                });
+            }
         }
     };
 

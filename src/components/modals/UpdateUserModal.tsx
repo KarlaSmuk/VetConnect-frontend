@@ -70,7 +70,7 @@ export default function UpdateUserModal({
         event.stopPropagation();
         try {
 
-            if(!validator.isEmail(user.email!)){
+            if(!validator.isEmail(user.email!) && user.email){
                 toast({
                     title: "Pogrešan format Email-a",
                     status: "error",

@@ -12,17 +12,17 @@ import { useEffect, useState } from "react";
 import { VetsAppointmentsDto } from "../../api/types/api.types";
 import {
     getAppointmentsByClinicId,
-    updateAppointmentStatus
+    updateAppointmentStatus,
 } from "../../api/appointment.service";
 import { AppointmentStatus } from "../../enums/appointmentStatus.enum";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 export default function AppointmentsVets() {
-    
     const [appointments, setAppointments] = useState<VetsAppointmentsDto>([]);
 
     const { currentUser } = useAuth();
-
+    const navigate = useNavigate();
 
     const toast = useToast();
 
@@ -30,7 +30,6 @@ export default function AppointmentsVets() {
         fetchAppointments();
     }, []);
 
- 
     const fetchAppointments = async () => {
         try {
             const data = await getAppointmentsByClinicId(currentUser!.vet!.clinicId);
@@ -40,26 +39,27 @@ export default function AppointmentsVets() {
         }
     };
 
-    const handleUpdateStatus= async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, status: AppointmentStatus, appointmentId: string) => {
-        e.preventDefault()
+    const handleUpdateStatus = async (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        status: AppointmentStatus,
+        appointmentId: string
+    ) => {
+        e.preventDefault();
         try {
             await updateAppointmentStatus({
                 appointmentId: appointmentId,
-                status: status
-            })
+                status: status,
+            });
 
-            
-            setAppointments(prev => prev.filter(app => app.id != appointmentId))
-           
-            
+            setAppointments((prev) => prev.filter((app) => app.id != appointmentId));
         } catch (error) {
-            console.log("Error updating status:", error)
+            console.log("Error updating status:", error);
             toast({
                 title: "Pogreška kod promjene statusa termina.",
                 status: "error",
             });
         }
-    }
+    };
 
     return (
         <Flex
@@ -76,61 +76,68 @@ export default function AppointmentsVets() {
                 width={"90%"}
             >
                 <Heading>Rezervirani termini</Heading>
-                <Flex wrap={'wrap'} gap={4}>
-                {appointments && appointments.map((appointment) => (
+                <Flex wrap={"wrap"} gap={4}>
+                    {appointments &&
+                        appointments.map((appointment) => (
                             <Flex key={appointment.id} direction={"column"} mt={5}>
                                 <Flex direction={"row"} wrap={"wrap"} gap={5} my={5}>
-                                        <Flex
-                                            borderRadius={"20px"}
-                                            border={"1px"}
-                                            borderColor={"gray.400"}
-                                            bgColor={"white"}
-                                            padding={4}
-                                            direction={"column"}
-                                            alignItems={'flex-end'}
-                                        >
-                                            <UnorderedList key={appointment.id} styleType={"none"}>
-                                                <ListItem>
-                                                    Ime ljubimca: {appointment.pet!.name}
-                                                </ListItem>
-                                                <ListItem>
-                                                    Vrijeme: {new Date(appointment.time).toLocaleString()}
-                                                </ListItem>
-                                                <ListItem>
-                                                    Razlog dolaska: {appointment.purpose}
-                                                </ListItem>
-                                            </UnorderedList>
-                                            <Flex gap={3}>
-                                                <IconButton
-                                                    icon={<CloseIcon />}
-                                                    onClick={(e) => handleUpdateStatus(e, AppointmentStatus.NOSHOW, appointment.id)}
-                                                    mt={5}
-                                                    padding={2}
-                                                    colorScheme="red"
-                                                    textColor={"white"}
-                                                    size={'s'} 
-                                                    aria-label={"No-show"}
-                                                    isDisabled={new Date(appointment.time) > new Date()} 
-                                                />
-                                                <IconButton
-                                                    icon={<CheckIcon />}
-                                                    onClick={(e) => handleUpdateStatus(e, AppointmentStatus.COMPLETED, appointment.id)}
-                                                    mt={5}
-                                                    padding={2}
-                                                    colorScheme="green"
-                                                    textColor={"white"}
-                                                    size={'s'} 
-                                                    aria-label={"Completed"} 
-                                                    isDisabled={new Date(appointment.time) > new Date()} 
-                                          
-                                                />
-                                            </Flex>
+                                    <Flex
+                                        borderRadius={"20px"}
+                                        border={"1px"}
+                                        borderColor={"gray.400"}
+                                        bgColor={"white"}
+                                        padding={4}
+                                        direction={"column"}
+                                        alignItems={"flex-end"}
+                                    >
+                                        <UnorderedList key={appointment.id} styleType={"none"}>
+                                            <ListItem>Ime ljubimca: {appointment.pet!.name}</ListItem>
+                                            <ListItem>
+                                                Vrijeme: {new Date(appointment.time).toLocaleString()}
+                                            </ListItem>
+                                            <ListItem>Razlog dolaska: {appointment.purpose}</ListItem>
+                                        </UnorderedList>
+                                        <Flex gap={3}>
+                                            <IconButton
+                                                icon={<CloseIcon />}
+                                                onClick={(e) =>
+                                                    handleUpdateStatus(
+                                                        e,
+                                                        AppointmentStatus.NOSHOW,
+                                                        appointment.id
+                                                    )
+                                                }
+                                                mt={5}
+                                                padding={2}
+                                                colorScheme="red"
+                                                textColor={"white"}
+                                                size={"s"}
+                                                aria-label={"No-show"}
+                                                isDisabled={new Date(appointment.time) > new Date()}
+                                            />
+                                            <IconButton
+                                                icon={<CheckIcon />}
+                                                onClick={(e) => {
+                                                    handleUpdateStatus(
+                                                        e,
+                                                        AppointmentStatus.COMPLETED,
+                                                        appointment.id
+                                                    );
+                                                    navigate(`/pet/${appointment.pet?.id}`);
+                                                }}
+                                                mt={5}
+                                                padding={2}
+                                                colorScheme="green"
+                                                textColor={"white"}
+                                                size={"s"}
+                                                aria-label={"Completed"}
+                                                isDisabled={new Date(appointment.time) > new Date()}
+                                            />
                                         </Flex>
-                             
+                                    </Flex>
                                 </Flex>
                             </Flex>
-                        
-                ))}
+                        ))}
                 </Flex>
             </Flex>
         </Flex>

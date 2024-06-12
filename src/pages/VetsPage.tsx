@@ -30,12 +30,12 @@ import {
 import { deleteUser, sendOTP } from "../api/user.service";
 import CreateUserModal from "../components/modals/CreateUserModal";
 import UpdateUserModal from "../components/modals/UpdateUserModal";
-import NavBarGuests from "../components/NavBar";
 import { ROLE } from "../enums/roles.enum";
 import { getVetsByClinicId } from "../api/veterinarian.service";
 import { getClinicById } from "../api/clinic.service";
 import { UsersDto, Clinic, User } from "../api/types/api.types";
 import { useAuth } from "../auth/authProvider";
+import NavBar from "../components/NavBar";
 
 export default function Vets() {
     const [vetsData, setVetsData] = useState<UsersDto>([]);
@@ -148,8 +148,8 @@ export default function Vets() {
     };
 
     return (
-        <>
-            <NavBarGuests />
+        <Flex direction={"column"} height={"100vh"} bgColor={"gray.50"}>
+            <NavBar />
             <Flex justifyContent={"center"}>
                 <Heading size="xl" className="mt-10 mb-3 ml-5">
                     {" "}
@@ -167,6 +167,8 @@ export default function Vets() {
                         </Heading>
                         <Input
                             w={"200px"}
+                            bgColor={"white"}
+                            borderColor={"gray.500"}
                             mr={20}
                             placeholder=""
                             value={filterValue}
@@ -174,6 +176,8 @@ export default function Vets() {
                         />
                         <Select
                             w={"200px"}
+                            bgColor={"white"}
+                            borderColor={"gray.500"}
                             mr={20}
                             mt={5}
                             className="cursor-pointer"
@@ -211,8 +215,15 @@ export default function Vets() {
                     addNewUser={addNewUser}
                 />
             </Flex>
-            <TableContainer mt={5}>
-                <Table variant="striped" colorScheme="gray">
+            <TableContainer
+                bgColor={"white"}
+                marginX={2}
+                marginTop={5}
+                border={"1px"}
+                borderRadius={"10px"}
+                borderColor={"gray.400"}
+            >
+                <Table colorScheme="gray">
                     <Thead>
                         <Tr>
                             <Th></Th>
@@ -320,6 +331,6 @@ export default function Vets() {
                     </Flex>
                 )}
             </Flex>
-        </>
+        </Flex>
     );
 }

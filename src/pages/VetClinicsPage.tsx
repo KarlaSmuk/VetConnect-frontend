@@ -179,7 +179,9 @@ export default function VetClinics() {
                                 </Box>
                             </Flex>
                         </CardBody>
+                        {currentUser && (
                         <Divider width={"70vw"} alignSelf={"center"} />
+                        )}
                         {currentUser?.user.role !== ROLE.OWNER && (
                             <CardFooter>
                                 <Flex
@@ -269,6 +271,8 @@ export default function VetClinics() {
                                             </Flex>
                                         )}
                                     </Flex>
+                                    {currentUser && (
+
                                     <Flex justifyContent={"end"}>
                                         <Flex
                                             flexDirection={"column"}
@@ -283,6 +287,7 @@ export default function VetClinics() {
                                             <Text color={"gray"}>Veterinari</Text>
                                         </Flex>
                                     </Flex>
+                                    )}
                                 </Flex>
                             </CardFooter>
                         )}
